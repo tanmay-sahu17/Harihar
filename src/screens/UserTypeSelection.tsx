@@ -19,7 +19,6 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
       title: 'शिक्षक लॉगिन',
       subtitle: 'Teacher Login Portal',
       description: 'पेड़ लगाने वाले शिक्षकों के लिए',
-      icon: '👨‍🏫',
       bgColor: '#4CAF50',
       lightColor: '#E8F5E8',
     },
@@ -28,7 +27,6 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
       title: 'CRC लॉगिन',
       subtitle: 'Cluster Resource Coordinator',
       description: 'क्लस्टर निगरानी अधिकारी',
-      icon: '👨‍💼',
       bgColor: '#2196F3',
       lightColor: '#E3F2FD',
     },
@@ -37,7 +35,6 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
       title: 'BEO लॉगिन',
       subtitle: 'Block Education Officer',
       description: 'ब्लॉक शिक्षा अधिकारी',
-      icon: '👨‍💻',
       bgColor: '#9C27B0',
       lightColor: '#F3E5F5',
     },
@@ -46,7 +43,6 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
       title: 'DEO लॉगिन',
       subtitle: 'District Education Officer',
       description: 'जिला शिक्षा अधिकारी',
-      icon: '🏛️',
       bgColor: '#FF5722',
       lightColor: '#FFF3E0',
     }
@@ -77,11 +73,8 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
             activeOpacity={0.8}
           >
             <View style={styles.cardContent}>
-              {/* Icon and Title */}
+              {/* Title and Description */}
               <View style={styles.cardHeader}>
-                <View style={[styles.iconContainer, { backgroundColor: option.bgColor }]}>
-                  <Text style={styles.cardIcon}>{option.icon}</Text>
-                </View>
                 <View style={styles.titleContainer}>
                   <Text style={[styles.cardTitle, { color: option.bgColor }]}>{option.title}</Text>
                   <Text style={styles.cardSubtitle}>{option.subtitle}</Text>
@@ -193,17 +186,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  iconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  cardIcon: {
-    fontSize: 24,
   },
   titleContainer: {
     flex: 1,

@@ -5,263 +5,319 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
   Alert,
-  Dimensions,
 } from 'react-native';
 
-const { width } = Dimensions.get('window');
+interface CertificateScreenProps {
+  onBack?: () => void;
+}
 
-const CertificateScreen = () => {
-  const [selectedCertificate, setSelectedCertificate] = useState<number | null>(null);
+const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const certificates = [
+  // Sample students with certificate data
+  const studentsWithCertificates = [
     {
-      id: 1,
-      studentName: 'राहुल शर्मा',
-      class: '5वीं',
-      rollNo: '101',
-      treeName: 'आम का पेड़',
-      plantDate: '15 जनवरी 2024',
-      status: 'तैयार',
-      certificateNo: 'EPC/RAI/2024/001',
+      id: '1',
+      name: 'अमन शर्मा',
+      rollNumber: 'R001',
+      photoUploaded: true,
+      certificateGenerated: true,
+      certificateUrl: 'https://example.com/certificate/1.pdf',
+      uploadDate: '2024-12-15',
+      certificateDate: '2024-12-16',
     },
     {
-      id: 2,
-      studentName: 'प्रिया वर्मा',
-      class: '4थी',
-      rollNo: '205',
-      treeName: 'नींबू का पेड़',
-      plantDate: '20 जनवरी 2024',
-      status: 'तैयार',
-      certificateNo: 'EPC/RAI/2024/002',
+      id: '2',
+      name: 'प्रिया गुप्ता',
+      rollNumber: 'R002',
+      photoUploaded: true,
+      certificateGenerated: true,
+      certificateUrl: 'https://example.com/certificate/2.pdf',
+      uploadDate: '2024-12-14',
+      certificateDate: '2024-12-15',
     },
     {
-      id: 3,
-      studentName: 'अमित कुमार',
-      class: '3री',
-      rollNo: '156',
-      treeName: 'पीपल का पेड़',
-      plantDate: '25 जनवरी 2024',
-      status: 'प्रक्रिया में',
-      certificateNo: 'EPC/RAI/2024/003',
+      id: '3',
+      name: 'राहुल वर्मा',
+      rollNumber: 'R003',
+      photoUploaded: true,
+      certificateGenerated: false,
+      certificateUrl: null,
+      uploadDate: '2024-12-13',
+      certificateDate: null,
     },
     {
-      id: 4,
-      studentName: 'सुनीता देवी',
-      class: '5वीं',
-      rollNo: '089',
-      treeName: 'बरगद का पेड़',
-      plantDate: '30 जनवरी 2024',
-      status: 'तैयार',
-      certificateNo: 'EPC/RAI/2024/004',
+      id: '5',
+      name: 'विकास कुमार',
+      rollNumber: 'R005',
+      photoUploaded: true,
+      certificateGenerated: true,
+      certificateUrl: 'https://example.com/certificate/5.pdf',
+      uploadDate: '2024-12-11',
+      certificateDate: '2024-12-12',
+    },
+    {
+      id: '7',
+      name: 'अजय सिंह',
+      rollNumber: 'R007',
+      photoUploaded: true,
+      certificateGenerated: true,
+      certificateUrl: 'https://example.com/certificate/7.pdf',
+      uploadDate: '2024-12-10',
+      certificateDate: '2024-12-11',
+    },
+    {
+      id: '9',
+      name: 'रोहित पटेल',
+      rollNumber: 'R009',
+      photoUploaded: true,
+      certificateGenerated: false,
+      certificateUrl: null,
+      uploadDate: '2024-12-09',
+      certificateDate: null,
     },
   ];
 
-  const certificateStats = {
-    total: certificates.length,
-    ready: certificates.filter(cert => cert.status === 'तैयार').length,
-    processing: certificates.filter(cert => cert.status === 'प्रक्रिया में').length,
-    downloaded: 2,
+  // Calculate stats
+  const totalEligible = studentsWithCertificates.length;
+  const generatedCount = studentsWithCertificates.filter(s => s.certificateGenerated).length;
+  const pendingCount = totalEligible - generatedCount;
+
+  const handleDownloadCertificate = (student: any) => {
+    if (student.certificateUrl) {
+      Alert.alert(
+        'प्रमाणपत्र डाउनलोड',
+        `${student.name} का प्रमाणपत्र डाउनलोड किया जा रहा है...`,
+        [
+          { text: 'रद्द करें', style: 'cancel' },
+          { 
+            text: 'डाउनलोड करें', 
+            onPress: () => {
+              // Here you would integrate with actual download functionality
+              Alert.alert('सफलता!', 'प्रमाणपत्र डाउनलोड हो गया है');
+            }
+          },
+        ]
+      );
+    }
   };
 
-  const handleDownload = (certificate: any) => {
-    if (certificate.status !== 'तैयार') {
-      Alert.alert('त्रुटि', 'यह प्रमाणपत्र अभी तैयार नहीं है');
+  const handleViewCertificate = (student: any) => {
+    if (student.certificateUrl) {
+      Alert.alert(
+        'प्रमाणपत्र देखें',
+        `${student.name} का प्रमाणपत्र खोला जा रहा है...`,
+        [
+          { text: 'बंद करें', style: 'cancel' },
+          { 
+            text: 'देखें', 
+            onPress: () => {
+              // Here you would integrate with PDF viewer
+              Alert.alert('प्रमाणपत्र', 'PDF व्यूअर में खोला जा रहा है...');
+            }
+          },
+        ]
+      );
+    }
+  };
+
+  const handleGenerateCertificate = (student: any) => {
+    if (!student.photoUploaded) {
+      Alert.alert('त्रुटि', 'पहले फोटो अपलोड करें फिर प्रमाणपत्र बनवाएं');
       return;
     }
 
     Alert.alert(
-      'प्रमाणपत्र डाउनलोड',
-      `${certificate.studentName} का प्रमाणपत्र डाउनलोड करें?`,
+      'प्रमाणपत्र बनाएं',
+      `${student.name} के लिए प्रमाणपत्र बनाना चाहते हैं?`,
       [
-        {
-          text: 'PDF डाउनलोड',
-          onPress: () => {
-            Alert.alert('डाउनलोड शुरू', 'प्रमाणपत्र डाउनलोड हो रहा है...');
-          },
-        },
-        {
-          text: 'शेयर करें',
-          onPress: () => {
-            Alert.alert('शेयर', 'प्रमाणपत्र शेयर करने के विकल्प खुल रहे हैं...');
-          },
-        },
         { text: 'रद्द करें', style: 'cancel' },
+        { 
+          text: 'हां, बनाएं', 
+          onPress: () => {
+            setIsGenerating(true);
+            // Simulate certificate generation
+            setTimeout(() => {
+              setIsGenerating(false);
+              Alert.alert(
+                'सफलता!',
+                `${student.name} का प्रमाणपत्र सफलतापूर्वक बन गया है`,
+                [
+                  {
+                    text: 'ठीक है',
+                    onPress: () => {
+                      // Update the state to reflect generated certificate
+                      // In real app, you would refresh the data from API
+                    }
+                  }
+                ]
+              );
+            }, 3000);
+          }
+        },
       ]
     );
   };
 
-  const handleBulkDownload = () => {
-    const readyCertificates = certificates.filter(cert => cert.status === 'तैयार');
-    
-    if (readyCertificates.length === 0) {
-      Alert.alert('त्रुटि', 'कोई प्रमाणपत्र तैयार नहीं है');
-      return;
-    }
-
-    Alert.alert(
-      'सभी प्रमाणपत्र डाउनलोड',
-      `${readyCertificates.length} प्रमाणपत्र एक साथ डाउनलोड करें?`,
-      [
-        {
-          text: 'हाँ, डाउनलोड करें',
-          onPress: () => {
-            Alert.alert('डाउनलोड शुरू', 'सभी प्रमाणपत्र डाउनलोड हो रहे हैं...');
-          },
-        },
-        { text: 'रद्द करें', style: 'cancel' },
-      ]
-    );
-  };
-
-  const renderCertificatePreview = (certificate: any) => (
-    <View style={styles.previewContainer}>
-      <View style={styles.certificatePreview}>
-        <Text style={styles.previewTitle}>🏆 प्रमाणपत्र पूर्वावलोकन</Text>
-        
-        <View style={styles.certificateFrame}>
-          <View style={styles.certificateHeader}>
-            <Text style={styles.certificateTitle}>🌱 एक पेड़ माँ के नाम</Text>
-            <Text style={styles.certificateSubtitle}>प्रमाणपत्र</Text>
+  const renderCertificateCard = (student: any) => {
+    return (
+      <View key={student.id} style={styles.certificateCard}>
+        <View style={styles.cardHeader}>
+          <View style={styles.studentInfo}>
+            <Text style={styles.studentName}>{student.name}</Text>
+            <Text style={styles.rollNumber}>रोल नंबर: {student.rollNumber}</Text>
           </View>
-          
-          <View style={styles.certificateBody}>
-            <Text style={styles.certificateText}>यह प्रमाणित करता है कि</Text>
-            <Text style={styles.studentNameText}>{certificate.studentName}</Text>
-            <Text style={styles.certificateText}>कक्षा: {certificate.class} | अनुक्रमांक: {certificate.rollNo}</Text>
-            
-            <Text style={styles.certificateText}>ने पर्यावरण संरक्षण के लिए</Text>
-            <Text style={styles.treeNameText}>{certificate.treeName}</Text>
-            <Text style={styles.certificateText}>लगाया है</Text>
-            
-            <Text style={styles.dateText}>दिनांक: {certificate.plantDate}</Text>
-            <Text style={styles.certificateNoText}>प्रमाणपत्र क्रमांक: {certificate.certificateNo}</Text>
-          </View>
-          
-          <View style={styles.certificateFooter}>
-            <Text style={styles.signatureText}>प्राचार्य हस्ताक्षर</Text>
-            <Text style={styles.schoolStamp}>स्कूल मुहर</Text>
+          <View style={[
+            styles.statusBadge,
+            { backgroundColor: student.certificateGenerated ? '#4CAF50' : '#FF9800' }
+          ]}>
+            <Text style={styles.statusText}>
+              {student.certificateGenerated ? '🏆 तैयार' : '⏳ बकाया'}
+            </Text>
           </View>
         </View>
+        
+        <View style={styles.cardBody}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>फोटो अपलोड स्थिति:</Text>
+            <Text style={[
+              styles.infoValue,
+              { color: student.photoUploaded ? '#4CAF50' : '#FF5722' }
+            ]}>
+              {student.photoUploaded ? '✅ अपलोड किया गया' : '❌ अपलोड नहीं किया'}
+            </Text>
+          </View>
+          
+          {student.uploadDate && (
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>फोटो अपलोड दिनांक:</Text>
+              <Text style={styles.infoValue}>{student.uploadDate}</Text>
+            </View>
+          )}
+          
+          {student.certificateDate && (
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>प्रमाणपत्र बनाने की दिनांक:</Text>
+              <Text style={styles.infoValue}>{student.certificateDate}</Text>
+            </View>
+          )}
+        </View>
+        
+        <View style={styles.actionButtons}>
+          {student.certificateGenerated ? (
+            <>
+              <TouchableOpacity 
+                style={[styles.actionButton, styles.viewButton]}
+                onPress={() => handleViewCertificate(student)}
+              >
+                <Text style={styles.actionButtonText}>👁️ देखें</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.actionButton, styles.downloadButton]}
+                onPress={() => handleDownloadCertificate(student)}
+              >
+                <Text style={styles.actionButtonText}>📥 डाउनलोड</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <TouchableOpacity 
+              style={[
+                styles.actionButton, 
+                styles.generateButton,
+                (!student.photoUploaded || isGenerating) && styles.disabledButton
+              ]}
+              onPress={() => handleGenerateCertificate(student)}
+              disabled={!student.photoUploaded || isGenerating}
+            >
+              <Text style={styles.actionButtonText}>
+                {isGenerating ? '⏳ बनाया जा रहा...' : '🏆 बनाएं'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>🏆 प्रमाणपत्र</Text>
-        <Text style={styles.headerSubtitle}>छात्रों के प्रमाणपत्र देखें और डाउनलोड करें</Text>
-      </View>
-
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Stats Cards */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{certificateStats.total}</Text>
-            <Text style={styles.statLabel}>कुल</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backButtonText}>← वापस</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>🏆 प्रमाणपत्र</Text>
+            <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
           </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{certificateStats.ready}</Text>
-            <Text style={styles.statLabel}>तैयार</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{certificateStats.processing}</Text>
-            <Text style={styles.statLabel}>प्रक्रिया में</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{certificateStats.downloaded}</Text>
-            <Text style={styles.statLabel}>डाउनलोड</Text>
+          
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{totalEligible}</Text>
+              <Text style={styles.statLabel}>योग्य छात्र</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{generatedCount}</Text>
+              <Text style={styles.statLabel}>बने हुए</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{pendingCount}</Text>
+              <Text style={styles.statLabel}>बकाया</Text>
+            </View>
           </View>
         </View>
-
-        {/* Bulk Download Button */}
-        <TouchableOpacity style={styles.bulkDownloadButton} onPress={handleBulkDownload}>
-          <Text style={styles.bulkDownloadText}>📥 सभी तैयार प्रमाणपत्र डाउनलोड करें</Text>
-        </TouchableOpacity>
-
-        {/* Certificates List */}
-        <Text style={styles.sectionTitle}>छात्रों के प्रमाणपत्र</Text>
-        
-        {certificates.map((certificate) => (
-          <View key={certificate.id} style={styles.certificateCard}>
-            <View style={styles.certificateInfo}>
-              <View style={styles.certificateMainInfo}>
-                <Text style={styles.studentName}>{certificate.studentName}</Text>
-                <Text style={styles.classInfo}>कक्षा {certificate.class} | रोल नं. {certificate.rollNo}</Text>
-                <Text style={styles.treeInfo}>🌳 {certificate.treeName}</Text>
-                <Text style={styles.dateInfo}>रोपण दिनांक: {certificate.plantDate}</Text>
-              </View>
-              
-              <View style={styles.certificateStatus}>
-                <View style={[
-                  styles.statusBadge, 
-                  { backgroundColor: certificate.status === 'तैयार' ? '#4CAF50' : '#FF9800' }
-                ]}>
-                  <Text style={styles.statusText}>{certificate.status}</Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.certificateActions}>
-              <TouchableOpacity 
-                style={styles.previewButton}
-                onPress={() => setSelectedCertificate(selectedCertificate === certificate.id ? null : certificate.id)}
-              >
-                <Text style={styles.previewButtonText}>
-                  {selectedCertificate === certificate.id ? '⬆️ छुपाएं' : '👁️ देखें'}
-                </Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[
-                  styles.downloadButton,
-                  { opacity: certificate.status === 'तैयार' ? 1 : 0.5 }
-                ]}
-                onPress={() => handleDownload(certificate)}
-                disabled={certificate.status !== 'तैयार'}
-              >
-                <Text style={styles.downloadButtonText}>📥 डाउनलोड</Text>
-              </TouchableOpacity>
-            </View>
-
-            {selectedCertificate === certificate.id && renderCertificatePreview(certificate)}
-          </View>
-        ))}
 
         {/* Instructions */}
-        <View style={styles.instructionsCard}>
-          <Text style={styles.instructionsTitle}>📋 निर्देश</Text>
-          <Text style={styles.instructionsText}>
-            • प्रमाणपत्र PDF फॉर्मेट में डाउनलोड होंगे{'\n'}
-            • डाउनलोड किए गए प्रमाणपत्र को प्रिंट कर सकते हैं{'\n'}
-            • प्रमाणपत्र में QR कोड से वेरिफिकेशन हो सकता है{'\n'}
-            • समस्या होने पर तकनीकी सहायता से संपर्क करें
-          </Text>
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>📋 महत्वपूर्ण निर्देश:</Text>
+          <Text style={styles.instructionText}>• प्रमाणपत्र बनाने के लिए पहले फोटो अपलोड करना जरूरी है</Text>
+          <Text style={styles.instructionText}>• प्रमाणपत्र PDF फॉर्मेट में डाउनलोड होगा</Text>
+          <Text style={styles.instructionText}>• केवल फोटो अपलोड करने वाले छात्र ही यहां दिखेंगे</Text>
+          <Text style={styles.instructionText}>• डाउनलोड किए गए प्रमाणपत्र आपके डिवाइस में save हो जाएंगे</Text>
         </View>
 
-        {/* Help Section */}
-        <View style={styles.helpSection}>
-          <Text style={styles.helpTitle}>सहायता</Text>
+        {/* Certificates List */}
+        <View style={styles.certificatesContainer}>
+          <Text style={styles.sectionTitle}>
+            📜 छात्रों के प्रमाणपत्र ({totalEligible})
+          </Text>
           
-          <TouchableOpacity 
-            style={styles.helpButton}
-            onPress={() => Alert.alert('वीडियो गाइड', 'प्रमाणपत्र डाउनलोड करने की वीडियो गाइड देखें')}
-          >
-            <Text style={styles.helpEmoji}>🎥</Text>
-            <Text style={styles.helpText}>डाउनलोड गाइड देखें</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.helpButton}
-            onPress={() => Alert.alert('तकनीकी सहायता', 'प्रमाणपत्र संबंधी समस्या के लिए संपर्क करें')}
-          >
-            <Text style={styles.helpEmoji}>📞</Text>
-            <Text style={styles.helpText}>तकनीकी सहायता</Text>
-          </TouchableOpacity>
+          {studentsWithCertificates.length > 0 ? (
+            studentsWithCertificates.map(renderCertificateCard)
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyIcon}>📸</Text>
+              <Text style={styles.emptyTitle}>कोई छात्र योग्य नहीं है</Text>
+              <Text style={styles.emptyText}>
+                प्रमाणपत्र बनाने के लिए पहले छात्रों की फोटो अपलोड करें
+              </Text>
+            </View>
+          )}
         </View>
+
+        {/* Bulk Actions */}
+        {generatedCount < totalEligible && (
+          <View style={styles.bulkActionsContainer}>
+            <Text style={styles.bulkTitle}>🔄 सभी के लिए एक साथ:</Text>
+            <TouchableOpacity 
+              style={[styles.bulkButton, isGenerating && styles.disabledButton]}
+              disabled={isGenerating}
+            >
+              <Text style={styles.bulkButtonText}>
+                {isGenerating ? '⏳ सभी प्रमाणपत्र बनाए जा रहे...' : '🏆 सभी प्रमाणपत्र बनाएं'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <View style={styles.bottomSpace} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -271,286 +327,224 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F5E8',
   },
   header: {
-    backgroundColor: '#2E7D32',
-    paddingTop: 60,
-    paddingBottom: 24,
+    backgroundColor: '#9C27B0',
     paddingHorizontal: 20,
-    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
   },
-  headerTitle: {
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    marginBottom: 15,
+  },
+  backButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  titleSection: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 4,
+    marginBottom: 5,
   },
-  headerSubtitle: {
+  subtitle: {
     fontSize: 16,
     color: 'white',
     opacity: 0.9,
-    textAlign: 'center',
-  },
-  content: {
-    flex: 1,
-    padding: 16,
   },
   statsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    justifyContent: 'space-around',
   },
-  statCard: {
-    backgroundColor: 'white',
-    padding: 12,
-    borderRadius: 12,
+  statItem: {
     alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 2,
-    elevation: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 15,
+    minWidth: 80,
   },
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
+    color: 'white',
   },
   statLabel: {
     fontSize: 11,
-    color: '#4CAF50',
-    textAlign: 'center',
-  },
-  bulkDownloadButton: {
-    backgroundColor: '#2E7D32',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 20,
-    elevation: 3,
-  },
-  bulkDownloadText: {
     color: 'white',
+    opacity: 0.9,
+  },
+  instructionsContainer: {
+    backgroundColor: '#FFF3E0',
+    margin: 20,
+    padding: 15,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#FFE0B2',
+  },
+  instructionsTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#E65100',
+    marginBottom: 10,
+  },
+  instructionText: {
+    fontSize: 14,
+    color: '#BF360C',
+    marginBottom: 5,
+    lineHeight: 20,
+  },
+  certificatesContainer: {
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2E7D32',
-    marginBottom: 16,
+    marginBottom: 15,
   },
   certificateCard: {
     backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
+    borderRadius: 15,
+    marginBottom: 15,
+    elevation: 3,
+    overflow: 'hidden',
   },
-  certificateInfo: {
+  cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    alignItems: 'center',
+    backgroundColor: '#F3E5F5',
+    padding: 15,
   },
-  certificateMainInfo: {
+  studentInfo: {
     flex: 1,
   },
   studentName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
+    color: '#4A148C',
+    marginBottom: 3,
   },
-  classInfo: {
+  rollNumber: {
     fontSize: 14,
-    color: '#4CAF50',
-    marginBottom: 4,
-  },
-  treeInfo: {
-    fontSize: 14,
-    color: '#4CAF50',
-    marginBottom: 4,
-  },
-  dateInfo: {
-    fontSize: 12,
     color: '#666',
-  },
-  certificateStatus: {
-    justifyContent: 'center',
   },
   statusBadge: {
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
   },
   statusText: {
     color: 'white',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
-  certificateActions: {
+  cardBody: {
+    padding: 15,
+  },
+  infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 8,
   },
-  previewButton: {
-    backgroundColor: '#E8F5E8',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    flex: 1,
-    marginRight: 8,
-    alignItems: 'center',
-  },
-  previewButtonText: {
-    color: '#2E7D32',
+  infoLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    color: '#666',
+    flex: 1,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    flex: 1,
+    textAlign: 'right',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewButton: {
+    backgroundColor: '#2196F3',
   },
   downloadButton: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    flex: 1,
-    alignItems: 'center',
+    borderLeftWidth: 1,
+    borderLeftColor: '#F0F0F0',
   },
-  downloadButtonText: {
+  generateButton: {
+    backgroundColor: '#9C27B0',
+  },
+  disabledButton: {
+    backgroundColor: '#BDBDBD',
+    opacity: 0.6,
+  },
+  actionButtonText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
-  previewContainer: {
-    marginTop: 16,
+  bulkActionsContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
-  certificatePreview: {
-    backgroundColor: '#F5F5F5',
-    padding: 16,
-    borderRadius: 8,
-  },
-  previewTitle: {
+  bulkTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#2E7D32',
-    marginBottom: 12,
-    textAlign: 'center',
+    marginBottom: 10,
   },
-  certificateFrame: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#2E7D32',
-  },
-  certificateHeader: {
+  bulkButton: {
+    backgroundColor: '#9C27B0',
+    paddingVertical: 15,
+    borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    paddingBottom: 16,
+    elevation: 3,
   },
-  certificateTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
-  },
-  certificateSubtitle: {
+  bulkButtonText: {
+    color: 'white',
     fontSize: 16,
-    color: '#4CAF50',
+    fontWeight: 'bold',
   },
-  certificateBody: {
+  emptyState: {
     alignItems: 'center',
-    marginBottom: 20,
+    paddingVertical: 50,
+    paddingHorizontal: 20,
   },
-  certificateText: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 8,
-    textAlign: 'center',
+  emptyIcon: {
+    fontSize: 60,
+    marginBottom: 15,
   },
-  studentNameText: {
+  emptyTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2E7D32',
-    marginVertical: 8,
+    color: '#333',
+    marginBottom: 5,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#666',
     textAlign: 'center',
   },
-  treeNameText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    marginVertical: 8,
-    textAlign: 'center',
-  },
-  dateText: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 12,
-  },
-  certificateNoText: {
-    fontSize: 10,
-    color: '#999',
-    marginTop: 4,
-  },
-  certificateFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
-  },
-  signatureText: {
-    fontSize: 12,
-    color: '#666',
-  },
-  schoolStamp: {
-    fontSize: 12,
-    color: '#666',
-  },
-  instructionsCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 2,
-  },
-  instructionsTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 8,
-  },
-  instructionsText: {
-    fontSize: 14,
-    color: '#4CAF50',
-    lineHeight: 20,
-  },
-  helpSection: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  helpTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 12,
-  },
-  helpButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    backgroundColor: '#E8F5E8',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  helpEmoji: {
-    fontSize: 20,
-    marginRight: 12,
-  },
-  helpText: {
-    fontSize: 14,
-    color: '#2E7D32',
+  bottomSpace: {
+    height: 20,
   },
 });
 

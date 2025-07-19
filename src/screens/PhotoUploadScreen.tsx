@@ -6,245 +6,240 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  Dimensions,
-  Image,
+  TextInput,
+  SafeAreaView,
 } from 'react-native';
 
-const { width } = Dimensions.get('window');
+interface PhotoUploadScreenProps {
+  onBack?: () => void;
+}
 
-const PhotoUploadScreen = () => {
-  const [selectedPhotos, setSelectedPhotos] = useState({
-    student: null,
-    tree: null,
-    teacher: null,
-  });
+const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
+  const [selectedStudent, setSelectedStudent] = useState('');
+  const [treeName, setTreeName] = useState('');
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const [uploadStats, setUploadStats] = useState({
-    total: 145,
-    uploaded: 89,
-    pending: 56,
-  });
-
-  const photoTypes = [
-    {
-      key: 'student',
-      title: 'छात्र की फोटो',
-      emoji: '👨‍🎓',
-      description: 'पेड़ के साथ छात्र की स्पष्ट फोटो',
-      color: '#2E7D32',
-      required: true,
-    },
-    {
-      key: 'tree',
-      title: 'पेड़ की फोटो',
-      emoji: '🌳',
-      description: 'लगाए गए पेड़ की स्पष्ट फोटो',
-      color: '#4CAF50',
-      required: true,
-    },
-    {
-      key: 'teacher',
-      title: 'शिक्षक की फोटो',
-      emoji: '👨‍🏫',
-      description: 'पेड़ के साथ शिक्षक की फोटो',
-      color: '#66BB6A',
-      required: true,
-    },
+  // Sample student data - इसे आप backend से fetch कर सकते हैं
+  const students = [
+    { id: '1', name: 'अमन शर्मा' },
+    { id: '2', name: 'प्रिया गुप्ता' },
+    { id: '3', name: 'राहुल वर्मा' },
+    { id: '4', name: 'अनीता देवी' },
+    { id: '5', name: 'विकास कुमार' },
+    { id: '6', name: 'सुनीता राय' },
+    { id: '7', name: 'अजय सिंह' },
+    { id: '8', name: 'पूजा मिश्रा' },
+    { id: '9', name: 'रोहित पटेल' },
+    { id: '10', name: 'माया शुक्ला' },
   ];
 
-  const handlePhotoSelect = (type: string) => {
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return now.toLocaleString('hi-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const handleCameraPress = () => {
     Alert.alert(
       'फोटो चुनें',
-      'आप कैमरा या गैलरी से फोटो चुन सकते हैं',
+      'आप फोटो कैसे लेना चाहते हैं?',
       [
-        {
-          text: 'कैमरा से लें',
-          onPress: () => openCamera(type),
-        },
-        {
-          text: 'गैलरी से चुनें',
-          onPress: () => openGallery(type),
-        },
+        { text: 'कैमरा', onPress: () => openCamera() },
+        { text: 'गैलरी', onPress: () => openGallery() },
         { text: 'रद्द करें', style: 'cancel' },
       ]
     );
   };
 
-  const openCamera = (type: string) => {
-    // Placeholder for camera functionality
-    Alert.alert('कैमरा', `${type} के लिए कैमरा खुल रहा है...`);
-    // Here you would use expo-image-picker to open camera
-    setSelectedPhotos(prev => ({
-      ...prev,
-      [type]: `camera_photo_${type}.jpg`,
-    }));
+  const openCamera = () => {
+    // यहां Camera API integration होगा - expo-camera या react-native-image-picker
+    Alert.alert('कैमरा', 'कैमरा खोला जा रहा है...', [
+      {
+        text: 'OK',
+        onPress: () => {
+          // Demo के लिए placeholder image set कर रहे हैं
+          setCapturedPhoto('camera_demo');
+        },
+      },
+    ]);
   };
 
-  const openGallery = (type: string) => {
-    // Placeholder for gallery functionality
-    Alert.alert('गैलरी', `${type} के लिए गैलरी खुल रहा है...`);
-    // Here you would use expo-image-picker to open gallery
-    setSelectedPhotos(prev => ({
-      ...prev,
-      [type]: `gallery_photo_${type}.jpg`,
-    }));
+  const openGallery = () => {
+    // यहां Gallery API integration होगा - expo-image-picker
+    Alert.alert('गैलरी', 'गैलरी खोली जा रही है...', [
+      {
+        text: 'OK',
+        onPress: () => {
+          // Demo के लिए placeholder image set कर रहे हैं
+          setCapturedPhoto('gallery_demo');
+        },
+      },
+    ]);
   };
 
   const handleUpload = () => {
-    const { student, tree, teacher } = selectedPhotos;
-    
-    if (!student || !tree || !teacher) {
-      Alert.alert('त्रुटि', 'कृपया सभी तीन फोटो चुनें (छात्र, पेड़, शिक्षक)');
+    if (!selectedStudent) {
+      Alert.alert('त्रुटि', 'कृपया छात्र का चयन करें');
       return;
     }
 
-    Alert.alert(
-      'अपलोड पुष्टि',
-      'क्या आप सभी फोटो अपलोड करना चाहते हैं?',
-      [
-        {
-          text: 'हाँ, अपलोड करें',
-          onPress: () => {
-            Alert.alert('सफल!', 'सभी फोटो सफलतापूर्वक अपलोड हो गई हैं');
-            setUploadStats(prev => ({
-              ...prev,
-              uploaded: prev.uploaded + 1,
-              pending: prev.pending - 1,
-            }));
-          },
-        },
-        { text: 'रद्द करें', style: 'cancel' },
-      ]
-    );
-  };
+    if (!capturedPhoto) {
+      Alert.alert('त्रुटि', 'कृपया फोटो लें या चुनें');
+      return;
+    }
 
-  const clearPhoto = (type: string) => {
-    setSelectedPhotos(prev => ({
-      ...prev,
-      [type]: null,
-    }));
+    setIsUploading(true);
+
+    // Demo के लिए setTimeout - यहां आप actual API call करेंगे
+    setTimeout(() => {
+      setIsUploading(false);
+      Alert.alert(
+        'सफलता!',
+        'फोटो सफलतापूर्वक अपलोड हो गई है',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Reset form
+              setSelectedStudent('');
+              setTreeName('');
+              setCapturedPhoto(null);
+            },
+          },
+        ]
+      );
+    }, 2000);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>📸 फोटो अपलोड</Text>
-        <Text style={styles.headerSubtitle}>छात्र-पेड़-शिक्षक फोटो अपलोड करें</Text>
-      </View>
-
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Upload Stats */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{uploadStats.total}</Text>
-            <Text style={styles.statLabel}>कुल छात्र</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{uploadStats.uploaded}</Text>
-            <Text style={styles.statLabel}>अपलोड हो गए</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{uploadStats.pending}</Text>
-            <Text style={styles.statLabel}>बाकी हैं</Text>
-          </View>
-        </View>
-
-        {/* Progress Bar */}
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View 
-              style={[
-                styles.progressFill, 
-                { width: `${(uploadStats.uploaded / uploadStats.total) * 100}%` }
-              ]} 
-            />
-          </View>
-          <Text style={styles.progressText}>
-            प्रगति: {Math.round((uploadStats.uploaded / uploadStats.total) * 100)}%
-          </Text>
-        </View>
-
-        {/* Instructions */}
-        <View style={styles.instructionCard}>
-          <Text style={styles.instructionTitle}>📋 निर्देश</Text>
-          <Text style={styles.instructionText}>
-            • तीनों फोटो अच्छी गुणवत्ता में होनी चाहिए{'\n'}
-            • छात्र और शिक्षक पेड़ के साथ दिखने चाहिए{'\n'}
-            • फोटो में चेहरा स्पष्ट दिखना चाहिए{'\n'}
-            • पेड़ की फोटो अलग से भी लें
-          </Text>
-        </View>
-
-        {/* Photo Upload Cards */}
-        {photoTypes.map((photo) => (
-          <View key={photo.key} style={styles.photoCard}>
-            <View style={styles.photoHeader}>
-              <Text style={styles.photoEmoji}>{photo.emoji}</Text>
-              <View style={styles.photoTitleContainer}>
-                <Text style={styles.photoTitle}>{photo.title}</Text>
-                <Text style={styles.photoDescription}>{photo.description}</Text>
-                {photo.required && <Text style={styles.requiredText}>* आवश्यक</Text>}
-              </View>
-            </View>
-
-            {selectedPhotos[photo.key as keyof typeof selectedPhotos] ? (
-              <View style={styles.selectedPhotoContainer}>
-                <View style={styles.photoPreview}>
-                  <Text style={styles.photoPreviewText}>📷</Text>
-                  <Text style={styles.selectedText}>फोटो चुनी गई</Text>
-                </View>
-                <View style={styles.photoActions}>
-                  <TouchableOpacity 
-                    style={styles.changeButton}
-                    onPress={() => handlePhotoSelect(photo.key)}
-                  >
-                    <Text style={styles.changeButtonText}>बदलें</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    style={styles.removeButton}
-                    onPress={() => clearPhoto(photo.key)}
-                  >
-                    <Text style={styles.removeButtonText}>हटाएं</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ) : (
-              <TouchableOpacity 
-                style={[styles.uploadButton, { backgroundColor: photo.color }]}
-                onPress={() => handlePhotoSelect(photo.key)}
-              >
-                <Text style={styles.uploadButtonText}>📷 फोटो चुनें</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        ))}
-
-        {/* Upload Button */}
-        <TouchableOpacity style={styles.submitButton} onPress={handleUpload}>
-          <Text style={styles.submitButtonText}>🚀 सभी फोटो अपलोड करें</Text>
-        </TouchableOpacity>
-
-        {/* Help Section */}
-        <View style={styles.helpSection}>
-          <Text style={styles.helpTitle}>समस्या?</Text>
-          <TouchableOpacity 
-            style={styles.helpButton}
-            onPress={() => Alert.alert('वीडियो गाइड', 'फोटो अपलोड करने की वीडियो गाइड देखें')}
-          >
-            <Text style={styles.helpEmoji}>🎥</Text>
-            <Text style={styles.helpText}>फोटो अपलोड गाइड देखें</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backButtonText}>← वापस</Text>
           </TouchableOpacity>
           
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>📸 फोटो अपलोड</Text>
+            <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
+          </View>
+        </View>
+
+        <View style={styles.formContainer}>
+          {/* छात्र का नाम / ID */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>✅ छात्र का नाम / ID *</Text>
+            <View style={styles.pickerContainer}>
+              <TouchableOpacity 
+                style={styles.studentSelector}
+                onPress={() => {
+                  Alert.alert(
+                    'छात्र चुनें',
+                    '',
+                    [
+                      ...students.map(student => ({
+                        text: `${student.name} (ID: ${student.id})`,
+                        onPress: () => setSelectedStudent(student.id)
+                      })),
+                      { text: 'रद्द करें', style: 'cancel' }
+                    ]
+                  );
+                }}
+              >
+                <Text style={styles.selectorText}>
+                  {selectedStudent 
+                    ? students.find(s => s.id === selectedStudent)?.name + ` (ID: ${selectedStudent})` 
+                    : 'छात्र चुनें...'
+                  }
+                </Text>
+                <Text style={styles.dropdownArrow}>▼</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* फोटो Section */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>✅ फोटो (Camera/Gallery) *</Text>
+            <Text style={styles.photoSubtitle}>छात्र + पेड़ + माँ या महिला शिक्षिका</Text>
+            
+            <TouchableOpacity style={styles.photoButton} onPress={handleCameraPress}>
+              {capturedPhoto ? (
+                <View style={styles.photoPreview}>
+                  <View style={styles.photoPlaceholder}>
+                    <Text style={styles.photoIcon}>📷</Text>
+                    <Text style={styles.photoText}>फोटो चुनी गई</Text>
+                  </View>
+                  <TouchableOpacity 
+                    style={styles.changePhotoButton}
+                    onPress={handleCameraPress}
+                  >
+                    <Text style={styles.changePhotoText}>बदलें</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.photoPlaceholder}>
+                  <Text style={styles.photoIcon}>📸</Text>
+                  <Text style={styles.photoText}>फोटो लें या चुनें</Text>
+                  <Text style={styles.photoHint}>कैमरा या गैलरी से</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* पेड़ का नाम */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>✅ पेड़ का नाम (वैकल्पिक)</Text>
+            <TextInput
+              style={styles.textInput}
+              value={treeName}
+              onChangeText={setTreeName}
+              placeholder="जैसे: नीम, आम, पीपल, बरगद..."
+              placeholderTextColor="#999"
+            />
+          </View>
+
+          {/* Upload Date & Time */}
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>✅ अपलोड दिनांक और समय</Text>
+            <View style={styles.dateTimeContainer}>
+              <Text style={styles.dateTimeText}>{getCurrentDateTime()}</Text>
+              <Text style={styles.autoSetText}>स्वचालित सेट</Text>
+            </View>
+          </View>
+
+          {/* Upload Button */}
           <TouchableOpacity 
-            style={styles.helpButton}
-            onPress={() => Alert.alert('तकनीकी सहायता', 'मदद के लिए संपर्क करें: 9876543210')}
+            style={[
+              styles.uploadButton,
+              (!selectedStudent || !capturedPhoto || isUploading) && styles.uploadButtonDisabled
+            ]}
+            onPress={handleUpload}
+            disabled={!selectedStudent || !capturedPhoto || isUploading}
           >
-            <Text style={styles.helpEmoji}>📞</Text>
-            <Text style={styles.helpText}>तकनीकी सहायता</Text>
+            <Text style={styles.uploadButtonText}>
+              {isUploading ? '⏳ अपलोड हो रहा है...' : '📤 अपलोड करें'}
+            </Text>
           </TouchableOpacity>
+
+          {/* Info Box */}
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>📝 महत्वपूर्ण निर्देश:</Text>
+            <Text style={styles.infoText}>• फोटो में छात्र, पेड़ और माँ/महिला शिक्षिका दिखनी चाहिए</Text>
+            <Text style={styles.infoText}>• फोटो साफ और स्पष्ट होनी चाहिए</Text>
+            <Text style={styles.infoText}>• छात्र का चयन करना अनिवार्य है</Text>
+            <Text style={styles.infoText}>• पेड़ का नाम वैकल्पिक है लेकिन बेहतर होगा</Text>
+            <Text style={styles.infoText}>• अपलोड का समय स्वचालित रूप से रिकॉर्ड हो जाएगा</Text>
+          </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -254,227 +249,192 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F5E8',
   },
   header: {
-    backgroundColor: '#2E7D32',
-    paddingTop: 60,
-    paddingBottom: 24,
+    backgroundColor: '#4CAF50',
     paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    marginBottom: 15,
+  },
+  backButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  titleSection: {
     alignItems: 'center',
   },
-  headerTitle: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 4,
+    marginBottom: 5,
   },
-  headerSubtitle: {
+  subtitle: {
     fontSize: 16,
     color: 'white',
     opacity: 0.9,
   },
-  content: {
-    flex: 1,
-    padding: 16,
+  formContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 25,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  fieldContainer: {
+    marginBottom: 25,
   },
-  statCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 4,
-    elevation: 2,
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#4CAF50',
-    textAlign: 'center',
-  },
-  progressContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  progressBar: {
-    height: 8,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 4,
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#4CAF50',
-    borderRadius: 4,
-  },
-  progressText: {
-    fontSize: 14,
-    color: '#2E7D32',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  instructionCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  instructionTitle: {
+  fieldLabel: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#2E7D32',
     marginBottom: 8,
   },
-  instructionText: {
-    fontSize: 14,
-    color: '#4CAF50',
-    lineHeight: 20,
-  },
-  photoCard: {
+  pickerContainer: {
     backgroundColor: 'white',
-    padding: 16,
     borderRadius: 12,
-    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#C8E6C9',
     elevation: 2,
   },
-  photoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  photoEmoji: {
-    fontSize: 32,
-    marginRight: 12,
-  },
-  photoTitleContainer: {
-    flex: 1,
-  },
-  photoTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 4,
-  },
-  photoDescription: {
-    fontSize: 12,
-    color: '#4CAF50',
-    marginBottom: 2,
-  },
-  requiredText: {
-    fontSize: 11,
-    color: '#FF5722',
-    fontWeight: '600',
-  },
-  selectedPhotoContainer: {
+  studentSelector: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
+  selectorText: {
+    fontSize: 16,
+    color: '#333',
+    flex: 1,
+  },
+  dropdownArrow: {
+    fontSize: 12,
+    color: '#666',
+  },
+  photoButton: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#C8E6C9',
+    borderStyle: 'dashed',
+    padding: 20,
+    alignItems: 'center',
+    elevation: 2,
+    minHeight: 120,
+    justifyContent: 'center',
+  },
+  photoSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 10,
+    fontStyle: 'italic',
   },
   photoPreview: {
-    flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    width: '100%',
   },
-  photoPreviewText: {
-    fontSize: 24,
-    marginRight: 8,
-  },
-  selectedText: {
-    fontSize: 14,
-    color: '#4CAF50',
-    fontWeight: '600',
-  },
-  photoActions: {
-    flexDirection: 'row',
-  },
-  changeButton: {
-    backgroundColor: '#2E7D32',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginRight: 8,
-  },
-  changeButtonText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  removeButton: {
-    backgroundColor: '#F44336',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  removeButtonText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  uploadButton: {
-    padding: 16,
-    borderRadius: 12,
+  photoPlaceholder: {
     alignItems: 'center',
   },
-  uploadButtonText: {
-    color: 'white',
+  photoIcon: {
+    fontSize: 40,
+    marginBottom: 10,
+  },
+  photoText: {
     fontSize: 16,
+    color: '#4CAF50',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  photoHint: {
+    fontSize: 12,
+    color: '#666',
+  },
+  changePhotoButton: {
+    marginTop: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+  },
+  changePhotoText: {
+    color: 'white',
+    fontSize: 12,
     fontWeight: 'bold',
   },
-  submitButton: {
-    backgroundColor: '#2E7D32',
-    padding: 18,
+  textInput: {
+    backgroundColor: 'white',
     borderRadius: 12,
-    alignItems: 'center',
-    marginVertical: 20,
-    elevation: 4,
+    borderWidth: 2,
+    borderColor: '#C8E6C9',
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#333',
+    elevation: 2,
   },
-  submitButtonText: {
+  dateTimeContainer: {
+    backgroundColor: '#F1F8E9',
+    borderRadius: 12,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#C8E6C9',
+  },
+  dateTimeText: {
+    fontSize: 16,
+    color: '#2E7D32',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  autoSetText: {
+    fontSize: 12,
+    color: '#4CAF50',
+    fontStyle: 'italic',
+  },
+  uploadButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 15,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginTop: 10,
+    elevation: 3,
+  },
+  uploadButtonDisabled: {
+    backgroundColor: '#A5D6A7',
+    elevation: 1,
+  },
+  uploadButtonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  helpSection: {
-    backgroundColor: 'white',
-    padding: 16,
+  infoBox: {
+    backgroundColor: '#FFF3E0',
     borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
+    padding: 15,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#FFE0B2',
   },
-  helpTitle: {
+  infoTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2E7D32',
-    marginBottom: 12,
+    color: '#E65100',
+    marginBottom: 10,
   },
-  helpButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    backgroundColor: '#E8F5E8',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  helpEmoji: {
-    fontSize: 20,
-    marginRight: 12,
-  },
-  helpText: {
+  infoText: {
     fontSize: 14,
-    color: '#2E7D32',
+    color: '#BF360C',
+    marginBottom: 5,
+    lineHeight: 20,
   },
 });
 

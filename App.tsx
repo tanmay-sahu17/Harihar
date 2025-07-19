@@ -11,6 +11,15 @@ import TeacherHomeScreen from './src/screens/TeacherHomeScreen';
 import CRCHomeScreen from './src/screens/CRCHomeScreen';
 import BEOHomeScreen from './src/screens/BEOHomeScreen';
 import DEOHomeScreen from './src/screens/DEOHomeScreen';
+import PhotoUploadScreen from './src/screens/PhotoUploadScreen';
+import PreviousPhotosScreen from './src/screens/PreviousPhotosScreen';
+import StudentsDataScreen from './src/screens/StudentsDataScreen';
+import CertificateScreen from './src/screens/CertificateScreen';
+import BlockProgressScreen from './src/screens/BlockProgressScreen';
+import SchoolStatusScreen from './src/screens/SchoolStatusScreen';
+import MissingDataScreen from './src/screens/MissingDataScreen';
+import FilterSortScreen from './src/screens/FilterSortScreen';
+import DailyReportScreen from './src/screens/DailyReportScreen';
 
 // App with navigation between screens
 export default function App() {
@@ -123,16 +132,61 @@ export default function App() {
       
       // Role-specific home screens
       case 'teacherHome':
-        return <TeacherHomeScreen onBack={handleBackToUserSelection} />;
+        return <TeacherHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
       
       case 'crcHome':
         return <CRCHomeScreen onBack={handleBackToUserSelection} />;
       
       case 'beoHome':
-        return <BEOHomeScreen onBack={handleBackToUserSelection} />;
+        return <BEOHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
       
       case 'deoHome':
-        return <DEOHomeScreen onBack={handleBackToUserSelection} />;
+        return <DEOHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
+
+      // Photo Upload Screen
+      case 'photoUpload':
+        return <PhotoUploadScreen onBack={() => setCurrentScreen('teacherHome')} />;
+
+      // Previous Photos Screen
+      case 'previousPhotos':
+        return <PreviousPhotosScreen onBack={() => setCurrentScreen('teacherHome')} />;
+
+      // Students Data Screen
+      case 'studentsData':
+        return <StudentsDataScreen onBack={() => setCurrentScreen('teacherHome')} />;
+
+      // Certificate Screen
+      case 'certificate':
+        return <CertificateScreen onBack={() => setCurrentScreen('teacherHome')} />;
+
+      // BEO specific screens
+      case 'blockProgress':
+        return <BlockProgressScreen onBack={() => setCurrentScreen('beoHome')} />;
+
+      case 'schoolStatus':
+        return <SchoolStatusScreen onBack={() => setCurrentScreen('beoHome')} />;
+
+      case 'missingData':
+        return <MissingDataScreen onBack={() => setCurrentScreen('beoHome')} />;
+
+      case 'filterSort':
+        return <FilterSortScreen onBack={() => setCurrentScreen('beoHome')} />;
+
+      case 'dailyReport':
+        return <DailyReportScreen onBack={() => setCurrentScreen('beoHome')} />;
+
+      // DEO specific screens
+      case 'blockTable':
+        return <BlockProgressScreen onBack={() => setCurrentScreen('deoHome')} />;
+
+      case 'filtersFlags':
+        return <FilterSortScreen onBack={() => setCurrentScreen('deoHome')} />;
+
+      case 'reports':
+        return <DailyReportScreen onBack={() => setCurrentScreen('deoHome')} />;
+
+      case 'activityLog':
+        return <MissingDataScreen onBack={() => setCurrentScreen('deoHome')} />;
 
       default:
         return <UserTypeSelection onSelectUserType={handleUserTypeSelection} />;

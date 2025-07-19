@@ -13,9 +13,10 @@ const { width } = Dimensions.get('window');
 
 interface TeacherHomeScreenProps {
   onBack?: () => void;
+  onNavigate?: (screenName: string) => void;
 }
 
-const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
+const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigate }) => {
   const quickActions = [
     {
       id: 'photo',
@@ -39,13 +40,6 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
       color: '#2196F3',
     },
     {
-      id: 'progress',
-      title: 'प्रगति रिपोर्ट',
-      subtitle: 'अपना प्रदर्शन देखें',
-      icon: '📊',
-      color: '#FF9800',
-    },
-    {
       id: 'certificate',
       title: 'प्रमाणपत्र',
       subtitle: 'अपना सर्टिफिकेट',
@@ -53,6 +47,33 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
       color: '#9C27B0',
     },
   ];
+
+  const handleQuickAction = (actionId: string) => {
+    switch (actionId) {
+      case 'photo':
+        if (onNavigate) {
+          onNavigate('photoUpload');
+        }
+        break;
+      case 'previousPhotos':
+        if (onNavigate) {
+          onNavigate('previousPhotos');
+        }
+        break;
+      case 'students':
+        if (onNavigate) {
+          onNavigate('studentsData');
+        }
+        break;
+      case 'certificate':
+        if (onNavigate) {
+          onNavigate('certificate');
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -90,7 +111,11 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
           <Text style={styles.sectionTitle}>⚡ त्वरित कार्य</Text>
           <View style={styles.actionsGrid}>
             {quickActions.map((action) => (
-              <TouchableOpacity key={action.id} style={[styles.actionCard, { borderColor: action.color }]}>
+              <TouchableOpacity 
+                key={action.id} 
+                style={[styles.actionCard, { borderColor: action.color }]}
+                onPress={() => handleQuickAction(action.id)}
+              >
                 <View style={[styles.actionIcon, { backgroundColor: action.color }]}>
                   <Text style={styles.actionEmoji}>{action.icon}</Text>
                 </View>
