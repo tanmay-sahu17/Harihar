@@ -63,6 +63,24 @@ const BEOHomeScreen: React.FC<BEOHomeScreenProps> = ({ onBack }) => {
     { title: 'स्कूल विजिट का लक्ष्य', target: 50, achieved: 35, percentage: 70 },
   ];
 
+  const schoolsList = [
+    // खुर्सीपार क्लस्टर
+    { id: 1, crcName: 'खुर्सीपार क्लस्टर', name: 'राजकीय प्राथमिक शाला खुर्सीपार', teachers: 4, plants: 32, photos: 28, performance: '88%' },
+    { id: 2, crcName: 'खुर्सीपार क्लस्टर', name: 'राजकीय मध्य शाला देवरी', teachers: 6, plants: 45, photos: 42, performance: '93%' },
+    { id: 3, crcName: 'खुर्सीपार क्लस्टर', name: 'राजकीय प्राथमिक शाला सिमगा', teachers: 3, plants: 24, photos: 20, performance: '83%' },
+    
+    // देवरी क्लस्टर
+    { id: 4, crcName: 'देवरी क्लस्टर', name: 'राजकीय उच्च प्राथमिक शाला देवरी', teachers: 8, plants: 64, photos: 55, performance: '86%' },
+    { id: 5, crcName: 'देवरी क्लस्टर', name: 'राजकीय प्राथमिक शाला नांदगांव', teachers: 2, plants: 16, photos: 14, performance: '88%' },
+    
+    // भिलाई क्लस्टर
+    { id: 6, crcName: 'भिलाई क्लस्टर', name: 'राजकीय मध्य शाला भिलाई', teachers: 5, plants: 40, photos: 35, performance: '75%' },
+    { id: 7, crcName: 'भिलाई क्लस्टर', name: 'राजकीय प्राथमिक शाला धमतरी', teachers: 3, plants: 24, photos: 18, performance: '82%' },
+    
+    // अभनपुर क्लस्टर
+    { id: 8, crcName: 'अभनपुर क्लस्टर', name: 'राजकीय प्राथमिक शाला अभनपुर', teachers: 4, plants: 30, photos: 22, performance: '73%' },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -109,30 +127,46 @@ const BEOHomeScreen: React.FC<BEOHomeScreenProps> = ({ onBack }) => {
           </View>
         </View>
 
-        {/* Monthly Targets */}
+        {/* Schools List by CRC */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🎯 मासिक लक्ष्य</Text>
-          <View style={styles.targetsContainer}>
-            {monthlyTargets.map((target, index) => (
-              <View key={index} style={styles.targetCard}>
-                <Text style={styles.targetTitle}>{target.title}</Text>
-                <View style={styles.targetProgress}>
-                  <View style={styles.progressBarContainer}>
-                    <View 
-                      style={[
-                        styles.progressBar, 
-                        { width: `${target.percentage}%` }
-                      ]} 
-                    />
-                  </View>
-                  <Text style={styles.targetPercentage}>{target.percentage}%</Text>
-                </View>
-                <Text style={styles.targetNumbers}>
-                  {target.achieved} / {target.target}
-                </Text>
+          <Text style={styles.sectionTitle}>� CRC-wise स्कूल सूची</Text>
+          
+          {/* Group schools by CRC */}
+          {clusterPerformance.map((cluster) => (
+            <View key={cluster.name} style={styles.crcSection}>
+              <View style={styles.crcHeader}>
+                <Text style={styles.crcName}>{cluster.name}</Text>
+                <Text style={styles.crcPerformance}>{cluster.performance}%</Text>
               </View>
-            ))}
-          </View>
+              
+              <View style={styles.schoolsInCrc}>
+                {schoolsList
+                  .filter(school => school.crcName === cluster.name)
+                  .map((school) => (
+                    <TouchableOpacity key={school.id} style={styles.schoolCard}>
+                      <View style={styles.schoolHeader}>
+                        <Text style={styles.schoolName}>{school.name}</Text>
+                        <Text style={styles.schoolPerformance}>{school.performance}</Text>
+                      </View>
+                      <View style={styles.schoolStats}>
+                        <View style={styles.schoolStat}>
+                          <Text style={styles.schoolStatIcon}>👨‍🏫</Text>
+                          <Text style={styles.schoolStatText}>{school.teachers}</Text>
+                        </View>
+                        <View style={styles.schoolStat}>
+                          <Text style={styles.schoolStatIcon}>🌳</Text>
+                          <Text style={styles.schoolStatText}>{school.plants}</Text>
+                        </View>
+                        <View style={styles.schoolStat}>
+                          <Text style={styles.schoolStatIcon}>📸</Text>
+                          <Text style={styles.schoolStatText}>{school.photos}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            </View>
+          ))}
         </View>
 
         {/* Cluster Performance */}
@@ -144,7 +178,7 @@ const BEOHomeScreen: React.FC<BEOHomeScreenProps> = ({ onBack }) => {
                 <View style={styles.clusterHeader}>
                   <View style={styles.clusterInfo}>
                     <Text style={styles.clusterName}>{cluster.name}</Text>
-                    <Text style={styles.crcName}>CRC: {cluster.crc}</Text>
+                    <Text style={styles.crcCoordinatorName}>CRC: {cluster.crc}</Text>
                   </View>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(cluster.status) }]}>
                     <Text style={styles.statusText}>{getStatusText(cluster.status)}</Text>
@@ -419,7 +453,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 3,
   },
-  crcName: {
+  crcCoordinatorName: {
     fontSize: 12,
     color: '#666',
   },
@@ -525,6 +559,86 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#9C27B0',
     fontWeight: 'bold',
+  },
+  crcSection: {
+    marginBottom: 20,
+  },
+  crcHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F3E5F5',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  crcName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#9C27B0',
+    flex: 1,
+  },
+  crcPerformance: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    backgroundColor: 'white',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  schoolsInCrc: {
+    paddingLeft: 10,
+  },
+  schoolCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 10,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F3E5F5',
+    borderLeftWidth: 4,
+    borderLeftColor: '#9C27B0',
+  },
+  schoolHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  schoolName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#9C27B0',
+    flex: 1,
+    marginRight: 10,
+  },
+  schoolPerformance: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  schoolStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  schoolStat: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  schoolStatIcon: {
+    fontSize: 16,
+    marginBottom: 2,
+  },
+  schoolStatText: {
+    fontSize: 11,
+    color: '#666',
+    textAlign: 'center',
   },
   bottomSpace: {
     height: 20,

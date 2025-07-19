@@ -25,6 +25,13 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
       color: '#4CAF50',
     },
     {
+      id: 'previousPhotos',
+      title: 'पुराने फोटो देखें',
+      subtitle: 'पिछले फोटो की गैलरी',
+      icon: '🖼️',
+      color: '#FF5722',
+    },
+    {
       id: 'students',
       title: 'छात्र डेटा',
       subtitle: 'स्टूडेंट्स की जानकारी',
@@ -45,13 +52,6 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
       icon: '🏆',
       color: '#9C27B0',
     },
-  ];
-
-  const todaysTasks = [
-    'पेड़ों को पानी देना',
-    '5 छात्रों का रजिस्ट्रेशन पूरा करना',
-    'साप्ताहिक रिपोर्ट भेजना',
-    'मॉर्निंग असेंबली में पर्यावरण की बात करना',
   ];
 
   return (
@@ -97,24 +97,6 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack }) => {
                 <Text style={styles.actionTitle}>{action.title}</Text>
                 <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
               </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        {/* Today's Tasks */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📋 आज के कार्य</Text>
-          <View style={styles.tasksContainer}>
-            {todaysTasks.map((task, index) => (
-              <View key={index} style={styles.taskItem}>
-                <View style={styles.taskCheckbox}>
-                  <Text style={styles.taskNumber}>{index + 1}</Text>
-                </View>
-                <Text style={styles.taskText}>{task}</Text>
-                <TouchableOpacity style={styles.taskButton}>
-                  <Text style={styles.taskButtonText}>✓</Text>
-                </TouchableOpacity>
-              </View>
             ))}
           </View>
         </View>

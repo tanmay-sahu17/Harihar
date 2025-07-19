@@ -23,6 +23,49 @@ const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack }) => {
     { label: 'जीवित पेड़', value: '326', icon: '🌱' },
   ];
 
+  const schoolsList = [
+    { 
+      id: 1, 
+      name: 'राजकीय प्राथमिक शाला खुर्सीपार', 
+      teachers: 4, 
+      plants: 32, 
+      photos: 28,
+      performance: '88%' 
+    },
+    { 
+      id: 2, 
+      name: 'राजकीय मध्य शाला देवरी', 
+      teachers: 6, 
+      plants: 45, 
+      photos: 42,
+      performance: '93%' 
+    },
+    { 
+      id: 3, 
+      name: 'राजकीय प्राथमिक शाला सिमगा', 
+      teachers: 3, 
+      plants: 24, 
+      photos: 20,
+      performance: '83%' 
+    },
+    { 
+      id: 4, 
+      name: 'राजकीय उच्च प्राथमिक शाला रायपुर', 
+      teachers: 8, 
+      plants: 64, 
+      photos: 55,
+      performance: '86%' 
+    },
+    { 
+      id: 5, 
+      name: 'राजकीय प्राथमिक शाला नांदगांव', 
+      teachers: 2, 
+      plants: 16, 
+      photos: 14,
+      performance: '88%' 
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -50,6 +93,35 @@ const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack }) => {
                 <Text style={styles.statValue}>{stat.value}</Text>
                 <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Schools List */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🏫 स्कूल सूची</Text>
+          <View style={styles.schoolsContainer}>
+            {schoolsList.map((school) => (
+              <TouchableOpacity key={school.id} style={styles.schoolCard}>
+                <View style={styles.schoolHeader}>
+                  <Text style={styles.schoolName}>{school.name}</Text>
+                  <Text style={styles.schoolPerformance}>{school.performance}</Text>
+                </View>
+                <View style={styles.schoolStats}>
+                  <View style={styles.schoolStat}>
+                    <Text style={styles.schoolStatIcon}>👨‍🏫</Text>
+                    <Text style={styles.schoolStatText}>{school.teachers} शिक्षक</Text>
+                  </View>
+                  <View style={styles.schoolStat}>
+                    <Text style={styles.schoolStatIcon}>🌳</Text>
+                    <Text style={styles.schoolStatText}>{school.plants} पेड़</Text>
+                  </View>
+                  <View style={styles.schoolStat}>
+                    <Text style={styles.schoolStatIcon}>📸</Text>
+                    <Text style={styles.schoolStatText}>{school.photos} फोटो</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -143,6 +215,57 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   statLabel: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+  },
+  schoolsContainer: {
+    marginTop: 10,
+  },
+  schoolCard: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#E3F2FD',
+  },
+  schoolHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  schoolName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1976D2',
+    flex: 1,
+    marginRight: 10,
+  },
+  schoolPerformance: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  schoolStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  schoolStat: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  schoolStatIcon: {
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  schoolStatText: {
     fontSize: 12,
     color: '#666',
     textAlign: 'center',
