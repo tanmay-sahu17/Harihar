@@ -2,33 +2,29 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
 
-import LoginScreen from './src/screens/LoginScreen';
 import UserTypeSelection from './src/screens/UserTypeSelection';
-import CRCLoginScreen from './src/screens/CRCLoginScreen';
-import BEOLoginScreen from './src/screens/BEOLoginScreen';
-import DEOLoginScreen from './src/screens/DEOLoginScreen';
-import TeacherHomeScreen from './src/screens/TeacherHomeScreen';
 import CRCHomeScreen from './src/screens/CRCHomeScreen';
-import BEOHomeScreen from './src/screens/BEOHomeScreen';
-import DEOHomeScreen from './src/screens/DEOHomeScreen';
+import CRCLoginScreen from './src/screens/CRCLoginScreen';
+import TeacherLoginScreen from './src/screens/TeacherLoginScreen';
+import TeacherHomeScreen from './src/screens/TeacherHomeScreen';
 import PhotoUploadScreen from './src/screens/PhotoUploadScreen';
 import PreviousPhotosScreen from './src/screens/PreviousPhotosScreen';
 import StudentsDataScreen from './src/screens/StudentsDataScreen';
 import CertificateScreen from './src/screens/CertificateScreen';
-import BlockProgressScreen from './src/screens/BlockProgressScreen';
-import SchoolStatusScreen from './src/screens/SchoolStatusScreen';
-import MissingDataScreen from './src/screens/MissingDataScreen';
-import FilterSortScreen from './src/screens/FilterSortScreen';
-import DailyReportScreen from './src/screens/DailyReportScreen';
+import SchoolMonitoringScreen from './src/screens/SchoolMonitoringScreen';
+import TeacherReportsScreen from './src/screens/TeacherReportsScreen';
+import DataVerificationScreen from './src/screens/DataVerificationScreen';
+import ProgressTrackingScreen from './src/screens/ProgressTrackingScreen';
 
 // App with navigation between screens
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('userTypeSelection');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState<'teacher' | 'crc' | 'beo' | 'deo' | null>(null);
+  const [userType, setUserType] = useState<'teacher' | 'crc' | null>(null);
 
   // Screen navigation function
   const navigateToScreen = (screenName: string) => {
+    console.log('Navigation called with screenName:', screenName);
     if (screenName === 'userTypeSelection') {
       setIsLoggedIn(false);
       setUserType(null);
@@ -36,47 +32,32 @@ export default function App() {
       setIsLoggedIn(true);
     }
     setCurrentScreen(screenName);
+    console.log('Current screen set to:', screenName);
   };
 
   // Handle user type selection
-  const handleUserTypeSelection = (type: 'teacher' | 'crc' | 'beo' | 'deo') => {
+  const handleUserTypeSelection = (type: 'teacher' | 'crc') => {
     setUserType(type);
     switch (type) {
       case 'teacher':
-        setCurrentScreen('login');
+        setCurrentScreen('teacherLogin');
         break;
       case 'crc':
         setCurrentScreen('crcLogin');
         break;
-      case 'beo':
-        setCurrentScreen('beoLogin');
-        break;
-      case 'deo':
-        setCurrentScreen('deoLogin');
-        break;
     }
   };
 
-  // Handle login success
-  const handleLoginSuccess = () => {
+  // Handle Teacher login success
+  const handleTeacherLoginSuccess = () => {
     setIsLoggedIn(true);
-    // Navigate to role-specific home screen
-    switch (userType) {
-      case 'teacher':
-        setCurrentScreen('teacherHome');
-        break;
-      case 'crc':
-        setCurrentScreen('crcHome');
-        break;
-      case 'beo':
-        setCurrentScreen('beoHome');
-        break;
-      case 'deo':
-        setCurrentScreen('deoHome');
-        break;
-      default:
-        setCurrentScreen('home');
-    }
+    setCurrentScreen('teacherHome');
+  };
+
+  // Handle CRC login success
+  const handleCRCLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setCurrentScreen('crcHome');
   };
 
   // Handle back to user selection
@@ -94,54 +75,44 @@ export default function App() {
 
   // Render current screen
   const renderCurrentScreen = () => {
+    console.log('Rendering screen:', currentScreen);
     switch (currentScreen) {
       case 'userTypeSelection':
         return <UserTypeSelection onSelectUserType={handleUserTypeSelection} />;
       
-      case 'login':
-        return (
-          <LoginScreen 
-            onBack={handleBackToUserSelection}
-            onLogin={handleLoginSuccess}
-          />
-        );
+      // Teacher Login Screen
+      case 'teacherLogin':
+        return <TeacherLoginScreen 
+          onBack={handleBackToUserSelection} 
+          onLogin={handleTeacherLoginSuccess}
+        />;
       
+      // CRC Login Screen
       case 'crcLogin':
-        return (
-          <CRCLoginScreen 
-            onBack={handleBackToUserSelection}
-            onLogin={handleLoginSuccess}
-          />
-        );
-      
-      case 'beoLogin':
-        return (
-          <BEOLoginScreen 
-            onBack={handleBackToUserSelection}
-            onLogin={handleLoginSuccess}
-          />
-        );
-      
-      case 'deoLogin':
-        return (
-          <DEOLoginScreen 
-            onBack={handleBackToUserSelection}
-            onLogin={handleLoginSuccess}
-          />
-        );
+        return <CRCLoginScreen 
+          onBack={handleBackToUserSelection} 
+          onLogin={handleCRCLoginSuccess}
+        />;
       
       // Role-specific home screens
       case 'teacherHome':
         return <TeacherHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
       
       case 'crcHome':
-        return <CRCHomeScreen onBack={handleBackToUserSelection} />;
-      
-      case 'beoHome':
-        return <BEOHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
-      
-      case 'deoHome':
-        return <DEOHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
+        return <CRCHomeScreen onBack={handleBackToUserSelection} onNavigate={navigateToScreen} />;
+
+      // CRC/Supervisor specific screens
+      case 'schoolMonitoring':
+        return <SchoolMonitoringScreen onBack={() => setCurrentScreen('crcHome')} />;
+
+      case 'teacherReports':
+        return <TeacherReportsScreen onBack={() => setCurrentScreen('crcHome')} />;
+
+      case 'dataVerification':
+        return <DataVerificationScreen onBack={() => setCurrentScreen('crcHome')} />;
+
+      case 'progressTracking':
+        return <ProgressTrackingScreen onBack={() => setCurrentScreen('crcHome')} />;
 
       // Photo Upload Screen
       case 'photoUpload':
@@ -158,35 +129,6 @@ export default function App() {
       // Certificate Screen
       case 'certificate':
         return <CertificateScreen onBack={() => setCurrentScreen('teacherHome')} />;
-
-      // BEO specific screens
-      case 'blockProgress':
-        return <BlockProgressScreen onBack={() => setCurrentScreen('beoHome')} />;
-
-      case 'schoolStatus':
-        return <SchoolStatusScreen onBack={() => setCurrentScreen('beoHome')} />;
-
-      case 'missingData':
-        return <MissingDataScreen onBack={() => setCurrentScreen('beoHome')} />;
-
-      case 'filterSort':
-        return <FilterSortScreen onBack={() => setCurrentScreen('beoHome')} />;
-
-      case 'dailyReport':
-        return <DailyReportScreen onBack={() => setCurrentScreen('beoHome')} />;
-
-      // DEO specific screens
-      case 'blockTable':
-        return <BlockProgressScreen onBack={() => setCurrentScreen('deoHome')} />;
-
-      case 'filtersFlags':
-        return <FilterSortScreen onBack={() => setCurrentScreen('deoHome')} />;
-
-      case 'reports':
-        return <DailyReportScreen onBack={() => setCurrentScreen('deoHome')} />;
-
-      case 'activityLog':
-        return <MissingDataScreen onBack={() => setCurrentScreen('deoHome')} />;
 
       default:
         return <UserTypeSelection onSelectUserType={handleUserTypeSelection} />;

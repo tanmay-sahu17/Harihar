@@ -13,83 +13,53 @@ const { width } = Dimensions.get('window');
 
 interface CRCHomeScreenProps {
   onBack?: () => void;
+  onNavigate?: (screenName: string) => void;
 }
 
-const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack }) => {
-  const clusterStats = [
-    { label: 'कुल स्कूल', value: '12', icon: '🏫' },
-    { label: 'कुल शिक्षक', value: '48', icon: '👨‍🏫' },
-    { label: 'कुल पेड़', value: '384', icon: '🌳' },
-    { label: 'जीवित पेड़', value: '326', icon: '🌱' },
+const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack, onNavigate }) => {
+  const supervisorStats = [
+    { label: 'कुल स्कूल', value: '45' },
+    { label: 'फोटो अपलोड बाकी', value: '178' },
+    { label: 'अपलोड प्रतिशत', value: '35%' },
+    { label: 'पूर्ण स्कूल', value: '12' },
   ];
 
-  const schoolsList = [
-    { 
-      id: 1, 
-      name: 'राजकीय प्राथमिक शाला खुर्सीपार', 
-      teachers: 4, 
-      plants: 32, 
-      photos: 28,
-      performance: '88%' 
-    },
-    { 
-      id: 2, 
-      name: 'राजकीय मध्य शाला देवरी', 
-      teachers: 6, 
-      plants: 45, 
-      photos: 42,
-      performance: '93%' 
-    },
-    { 
-      id: 3, 
-      name: 'राजकीय प्राथमिक शाला सिमगा', 
-      teachers: 3, 
-      plants: 24, 
-      photos: 20,
-      performance: '83%' 
-    },
-    { 
-      id: 4, 
-      name: 'राजकीय उच्च प्राथमिक शाला रायपुर', 
-      teachers: 8, 
-      plants: 64, 
-      photos: 55,
-      performance: '86%' 
-    },
-    { 
-      id: 5, 
-      name: 'राजकीय प्राथमिक शाला नांदगांव', 
-      teachers: 2, 
-      plants: 16, 
-      photos: 14,
-      performance: '88%' 
-    },
+  const quickActions = [
+    { id: 'schoolMonitoring', title: 'स्कूल फोटो स्थिति' },
+    { id: 'teacherReports', title: 'शिक्षक अपलोड रिपोर्ट' },
+    { id: 'dataVerification', title: 'फोटो सत्यापन' },
+    { id: 'progressTracking', title: 'जिला प्रगति ट्रैकिंग' },
   ];
+
+  const handleQuickAction = (actionId: string) => {
+    if (onNavigate) {
+      onNavigate(actionId);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          {/* Back Button */}
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
             <Text style={styles.backButtonText}>← वापस</Text>
           </TouchableOpacity>
           
           <View style={styles.welcomeSection}>
-            <Text style={styles.welcomeText}>नमस्ते CRC साहब! 🙏</Text>
-            <Text style={styles.subtitle}>Cluster Resource Coordinator</Text>
-            <Text style={styles.clusterInfo}>खुर्सीपार क्लस्टर, रायपुर</Text>
+            <Text style={styles.welcomeText}>सुपरवाइजर डैशबोर्ड</Text>
+            <Text style={styles.subtitle}>Supervisor Control Panel</Text>
+            <Text style={styles.blockInfo}>एक पेड़ माँ के नाम 2.0 निगरानी</Text>
+            <Text style={styles.urgentNotice}>🚨 रायपुर जिला पीछे है - तत्काल कार्रवाई करें</Text>
           </View>
         </View>
 
-        {/* Cluster Statistics */}
+        {/* Supervisor Statistics */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📊 क्लस्टर आंकड़े</Text>
+          <Text style={styles.sectionTitle}>निगरानी आंकड़े</Text>
           <View style={styles.statsGrid}>
-            {clusterStats.map((stat, index) => (
+            {supervisorStats.map((stat, index) => (
               <View key={index} style={styles.statCard}>
-                <Text style={styles.statIcon}>{stat.icon}</Text>
                 <Text style={styles.statValue}>{stat.value}</Text>
                 <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
@@ -97,30 +67,17 @@ const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack }) => {
           </View>
         </View>
 
-        {/* Schools List */}
+        {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🏫 स्कूल सूची</Text>
-          <View style={styles.schoolsContainer}>
-            {schoolsList.map((school) => (
-              <TouchableOpacity key={school.id} style={styles.schoolCard}>
-                <View style={styles.schoolHeader}>
-                  <Text style={styles.schoolName}>{school.name}</Text>
-                  <Text style={styles.schoolPerformance}>{school.performance}</Text>
-                </View>
-                <View style={styles.schoolStats}>
-                  <View style={styles.schoolStat}>
-                    <Text style={styles.schoolStatIcon}>👨‍🏫</Text>
-                    <Text style={styles.schoolStatText}>{school.teachers} शिक्षक</Text>
-                  </View>
-                  <View style={styles.schoolStat}>
-                    <Text style={styles.schoolStatIcon}>🌳</Text>
-                    <Text style={styles.schoolStatText}>{school.plants} पेड़</Text>
-                  </View>
-                  <View style={styles.schoolStat}>
-                    <Text style={styles.schoolStatIcon}>📸</Text>
-                    <Text style={styles.schoolStatText}>{school.photos} फोटो</Text>
-                  </View>
-                </View>
+          <Text style={styles.sectionTitle}>त्वरित कार्य</Text>
+          <View style={styles.actionsGrid}>
+            {quickActions.map((action) => (
+              <TouchableOpacity 
+                key={action.id} 
+                style={styles.actionCard}
+                onPress={() => handleQuickAction(action.id)}
+              >
+                <Text style={styles.actionTitle}>{action.title}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -135,7 +92,7 @@ const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F8FF',
+    backgroundColor: '#F1F8FF',
   },
   header: {
     backgroundColor: '#2196F3',
@@ -173,10 +130,17 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginBottom: 5,
   },
-  clusterInfo: {
+  blockInfo: {
     fontSize: 14,
     color: 'white',
     opacity: 0.8,
+  },
+  urgentNotice: {
+    fontSize: 12,
+    color: '#FFEB3B',
+    marginTop: 8,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   section: {
     paddingHorizontal: 20,
@@ -185,7 +149,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1976D2',
+    color: '#1565C0',
     marginBottom: 15,
   },
   statsGrid: {
@@ -202,16 +166,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#E3F2FD',
-  },
-  statIcon: {
-    fontSize: 30,
-    marginBottom: 8,
+    borderColor: '#BBDEFB',
   },
   statValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1976D2',
+    color: '#1565C0',
     marginBottom: 5,
   },
   statLabel: {
@@ -219,55 +179,26 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
-  schoolsContainer: {
-    marginTop: 10,
+  actionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
-  schoolCard: {
+  actionCard: {
     backgroundColor: 'white',
-    borderRadius: 15,
+    width: (width - 60) / 2,
     padding: 15,
+    borderRadius: 15,
+    alignItems: 'center',
     marginBottom: 15,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#E3F2FD',
+    borderColor: '#BBDEFB',
   },
-  schoolHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  schoolName: {
-    fontSize: 16,
+  actionTitle: {
+    fontSize: 13,
     fontWeight: 'bold',
-    color: '#1976D2',
-    flex: 1,
-    marginRight: 10,
-  },
-  schoolPerformance: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    backgroundColor: '#E8F5E9',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  schoolStats: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  schoolStat: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  schoolStatIcon: {
-    fontSize: 20,
-    marginBottom: 5,
-  },
-  schoolStatText: {
-    fontSize: 12,
-    color: '#666',
+    color: '#333',
     textAlign: 'center',
   },
   bottomSpace: {

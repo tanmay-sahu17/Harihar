@@ -21,30 +21,30 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigat
     {
       id: 'photo',
       title: 'फोटो अपलोड',
-      subtitle: 'पेड़ का फोटो लें',
+      subtitle: 'छात्र + पेड़ + शिक्षिका फोटो',
       icon: '📸',
       color: '#4CAF50',
     },
     {
-      id: 'previousPhotos',
-      title: 'पुराने फोटो देखें',
-      subtitle: 'पिछले फोटो की गैलरी',
-      icon: '🖼️',
-      color: '#FF5722',
-    },
-    {
       id: 'students',
-      title: 'छात्र डेटा',
-      subtitle: 'स्टूडेंट्स की जानकारी',
-      icon: '👥',
+      title: 'छात्र रजिस्ट्रेशन',
+      subtitle: 'प्रत्येक छात्र की जानकारी',
+      icon: '�',
       color: '#2196F3',
     },
     {
       id: 'certificate',
-      title: 'प्रमाणपत्र',
-      subtitle: 'अपना सर्टिफिकेट',
+      title: 'सर्टिफिकेट डाउनलोड',
+      subtitle: 'छात्रों के लिए प्रमाणपत्र',
       icon: '🏆',
       color: '#9C27B0',
+    },
+    {
+      id: 'previousPhotos',
+      title: 'अपलोडेड फोटो देखें',
+      subtitle: 'पहले अपलोड किए फोटो',
+      icon: '🖼️',
+      color: '#FF5722',
     },
   ];
 
@@ -89,6 +89,7 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigat
             <Text style={styles.welcomeText}>नमस्ते शिक्षक जी! 🙏</Text>
             <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
             <Text style={styles.schoolInfo}>राजकीय प्राथमिक शाला, रायपुर</Text>
+            <Text style={styles.importantNotice}>⚠️ प्रत्येक छात्र का फोटो पेड़ एवं शिक्षिका के साथ अपलोड अनिवार्य</Text>
           </View>
           <View style={styles.headerStats}>
             <View style={styles.statCard}>
@@ -103,6 +104,21 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigat
               <Text style={styles.statNumber}>85%</Text>
               <Text style={styles.statLabel}>सफलता दर</Text>
             </View>
+          </View>
+        </View>
+
+        {/* Important Instructions */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>📋 महत्वपूर्ण निर्देश</Text>
+          <View style={styles.instructionCard}>
+            <Text style={styles.instructionTitle}>एक पेड़ माँ के नाम 2.0 - अनिवार्य प्रक्रिया:</Text>
+            <Text style={styles.instructionText}>
+              • प्रत्येक छात्र के नाम पर एक पेड़ लगाना है{'\n'}
+              • छात्र + पेड़ + महिला शिक्षिका का साथ में फोटो लेना है{'\n'}
+              • पोर्टल में फोटो अपलोड करना अनिवार्य है{'\n'}
+              • सर्टिफिकेट डाउनलोड करके छात्रों को देना है{'\n'}
+              • रायपुर जिले का प्रतिशत बढ़ाने में सहयोग करें
+            </Text>
           </View>
         </View>
 
@@ -133,33 +149,35 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigat
             <View style={styles.activityItem}>
               <Text style={styles.activityIcon}>📸</Text>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>5 पेड़ों का फोटो अपलोड किया</Text>
+                <Text style={styles.activityTitle}>15 छात्रों का फोटो पेड़ और शिक्षिका के साथ अपलोड</Text>
                 <Text style={styles.activityTime}>2 घंटे पहले</Text>
               </View>
             </View>
             <View style={styles.activityItem}>
-              <Text style={styles.activityIcon}>👥</Text>
+              <Text style={styles.activityIcon}>🏆</Text>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>10 छात्रों का रजिस्ट्रेशन पूरा</Text>
+                <Text style={styles.activityTitle}>12 छात्रों के सर्टिफिकेट डाउनलोड किए</Text>
                 <Text style={styles.activityTime}>1 दिन पहले</Text>
               </View>
             </View>
             <View style={styles.activityItem}>
-              <Text style={styles.activityIcon}>📊</Text>
+              <Text style={styles.activityIcon}>�</Text>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>साप्ताहिक रिपोर्ट सबमिट की</Text>
-                <Text style={styles.activityTime}>3 दिन पहले</Text>
+                <Text style={styles.activityTitle}>25 छात्रों का रजिस्ट्रेशन पूर्ण</Text>
+                <Text style={styles.activityTime}>2 दिन पहले</Text>
               </View>
             </View>
           </View>
         </View>
 
-        {/* Tips Section */}
+        {/* Progress Status */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>💡 आज का टिप्स</Text>
+          <Text style={styles.sectionTitle}>� प्रगति स्थिति</Text>
           <View style={styles.tipCard}>
             <Text style={styles.tipText}>
-              🌱 पेड़ों को सुबह के समय पानी देना सबसे अच्छा होता है। इससे पूरे दिन भर पेड़ को नमी मिलती रहती है।
+              � रायपुर जिला: वर्तमान में पीछे है{'\n'}
+              📈 लक्ष्य: 100% छात्रों का फोटो अपलोड{'\n'}
+              ⚡ तत्काल कार्रवाई आवश्यक - प्रतिदिन प्रगति दिखानी है
             </Text>
           </View>
         </View>
@@ -215,6 +233,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'white',
     opacity: 0.8,
+  },
+  importantNotice: {
+    fontSize: 12,
+    color: '#FFEB3B',
+    marginTop: 8,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   headerStats: {
     flexDirection: 'row',
@@ -370,6 +395,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
+  },
+  instructionCard: {
+    backgroundColor: '#E3F2FD',
+    padding: 15,
+    borderRadius: 15,
+    borderLeftWidth: 4,
+    borderLeftColor: '#2196F3',
+  },
+  instructionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1565C0',
+    marginBottom: 8,
+  },
+  instructionText: {
+    fontSize: 13,
+    color: '#333',
+    lineHeight: 18,
   },
   bottomSpace: {
     height: 20,

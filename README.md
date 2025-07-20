@@ -1,6 +1,33 @@
-# Harihar Pathshala - Expo React Native App
+# Harihar Pathshala - एक पेड़ माँ के नाम 2.0
 
-A React Native application built with Expo and TypeScript that runs on Expo Go.
+A React Native Expo application for the "एक पेड़ माँ के नाम 2.0" (One Tree in Mother's Name 2.0) initiative by Raipur District Education Department.
+
+## Overview
+
+This mobile application helps manage tree plantation activities in schools, focusing on photo uploads of students with trees and female teachers, certificate generation, and progress tracking.
+
+## Key Features
+
+### For Teachers (शिक्षक)
+- **Photo Upload**: Upload photos of students with trees and female teachers
+- **Student Registration**: Register each student with tree planting details  
+- **Certificate Download**: Download certificates for students
+- **Progress Tracking**: View uploaded photos and activity history
+
+### For Supervisors (सुपरवाइजर)
+- **School Monitoring**: Track photo upload status across schools
+- **Teacher Reports**: Monitor teacher activity and uploads
+- **Data Verification**: Verify and approve uploaded content
+- **Progress Dashboard**: View district-wide progress and statistics
+
+## Important Requirements
+
+⚠️ **Mandatory Process for all Schools:**
+- Each student must plant one tree in a woman's name
+- Photo must include: Student + Tree + Female Teacher
+- Photo upload to portal is compulsory
+- Certificate must be downloaded and given to students
+- 100% photo upload target for Raipur district
 
 ## 🚀 Getting Started
 

@@ -9,18 +9,20 @@ import {
   Alert,
 } from 'react-native';
 
-interface CRCLoginScreenProps {
+interface TeacherLoginScreenProps {
   onBack: () => void;
   onLogin: () => void;
 }
 
-const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
-  const [username, setUsername] = useState('');
+const TeacherLoginScreen: React.FC<TeacherLoginScreenProps> = ({ onBack, onLogin }) => {
+  const [udiseId, setUdiseId] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
+  const [teacherName, setTeacherName] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
-  const handleLogin = () => {
-    if (!username.trim() || !phoneNumber.trim() || !password.trim()) {
+  const handleSendOtp = () => {
+    if (!udiseId.trim() || !phoneNumber.trim() || !teacherName.trim()) {
       Alert.alert('त्रुटि', 'कृपया सभी फील्ड भरें');
       return;
     }
@@ -30,8 +32,28 @@ const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
       return;
     }
 
-    // Accept any username, phone and password for supervisor login
-    onLogin();
+    // For demo purposes, simulate OTP sending
+    Alert.alert('सफलता', 'OTP आपके मोबाइल नंबर पर भेजा गया है');
+    setIsOtpSent(true);
+  };
+
+  const handleLogin = () => {
+    if (!isOtpSent) {
+      handleSendOtp();
+      return;
+    }
+
+    if (!otp.trim()) {
+      Alert.alert('त्रुटि', 'कृपया OTP दर्ज करें');
+      return;
+    }
+
+    // Simple validation for teacher (demo OTP: 1234)
+    if (otp === '1234') {
+      onLogin();
+    } else {
+      Alert.alert('त्रुटि', 'गलत OTP दर्ज किया गया');
+    }
   };
 
   return (
@@ -44,20 +66,30 @@ const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
 
       <View style={styles.loginContent}>
         <View style={styles.logoSection}>
-          <Text style={styles.logoEmoji}>👨‍💼</Text>
-          <Text style={styles.loginTitle}>सुपरवाइजर लॉगिन</Text>
+          <Text style={styles.logoEmoji}>👨‍🏫</Text>
+          <Text style={styles.loginTitle}>शिक्षक लॉगिन</Text>
           <Text style={styles.loginSubtitle}>एक पेड़ माँ के नाम 2.0</Text>
         </View>
 
         <View style={styles.loginForm}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>उपयोगकर्ता नाम</Text>
+            <Text style={styles.label}>UDISE ID</Text>
             <TextInput
               style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-              placeholder="अपना उपयोगकर्ता नाम दर्ज करें"
-              autoCapitalize="none"
+              value={udiseId}
+              onChangeText={setUdiseId}
+              placeholder="स्कूल का UDISE ID दर्ज करें"
+              keyboardType="numeric"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>शिक्षक का नाम</Text>
+            <TextInput
+              style={styles.input}
+              value={teacherName}
+              onChangeText={setTeacherName}
+              placeholder="अपना पूरा नाम दर्ज करें"
             />
           </View>
 
@@ -73,20 +105,33 @@ const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>पासवर्ड</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="अपना पासवर्ड दर्ज करें"
-              secureTextEntry
-            />
-          </View>
+          {isOtpSent && (
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>OTP</Text>
+              <TextInput
+                style={styles.input}
+                value={otp}
+                onChangeText={setOtp}
+                placeholder="4 अंकों का OTP दर्ज करें"
+                keyboardType="numeric"
+                maxLength={4}
+              />
+            </View>
+          )}
 
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>लॉगिन करें</Text>
+            <Text style={styles.loginButtonText}>
+              {isOtpSent ? 'लॉगिन करें' : 'OTP भेजें'}
+            </Text>
           </TouchableOpacity>
+
+          <View style={styles.credentialsHint}>
+            <Text style={styles.hintText}>डेमो जानकारी:</Text>
+            <Text style={styles.hintText}>UDISE ID: कोई भी</Text>
+            <Text style={styles.hintText}>नाम: कोई भी</Text>
+            <Text style={styles.hintText}>फोन: कोई 10 अंक</Text>
+            <Text style={styles.hintText}>OTP: 1234</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -96,7 +141,7 @@ const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F1F8FF',
+    backgroundColor: '#E8F5E8',
   },
   header: {
     paddingHorizontal: 20,
@@ -107,7 +152,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 25,
-    backgroundColor: '#2196F3',
+    backgroundColor: '#4CAF50',
   },
   backButtonText: {
     color: 'white',
@@ -130,13 +175,13 @@ const styles = StyleSheet.create({
   loginTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1565C0',
+    color: '#2E7D32',
     textAlign: 'center',
     marginBottom: 10,
   },
   loginSubtitle: {
     fontSize: 16,
-    color: '#2196F3',
+    color: '#4CAF50',
     textAlign: 'center',
   },
   loginForm: {
@@ -145,7 +190,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     elevation: 5,
     borderWidth: 1,
-    borderColor: '#BBDEFB',
+    borderColor: '#C8E6C9',
   },
   inputGroup: {
     marginBottom: 20,
@@ -153,20 +198,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1565C0',
+    color: '#2E7D32',
     marginBottom: 8,
   },
   input: {
     borderWidth: 2,
-    borderColor: '#BBDEFB',
+    borderColor: '#C8E6C9',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    backgroundColor: '#F8FBFF',
+    backgroundColor: '#F1F8E9',
   },
   loginButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#4CAF50',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -180,15 +225,15 @@ const styles = StyleSheet.create({
   credentialsHint: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: '#E8F5E8',
     borderRadius: 8,
   },
   hintText: {
     fontSize: 12,
-    color: '#1565C0',
+    color: '#2E7D32',
     textAlign: 'center',
     marginBottom: 2,
   },
 });
 
-export default CRCLoginScreen;
+export default TeacherLoginScreen;
