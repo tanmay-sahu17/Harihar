@@ -44,7 +44,7 @@ const CRCLoginScreen: React.FC<CRCLoginScreenProps> = ({ onBack, onLogin }) => {
 
       <View style={styles.loginContent}>
         <View style={styles.logoSection}>
-          <Text style={styles.logoEmoji}>👨‍💼</Text>
+          <Text style={styles.logoEmoji}></Text>
           <Text style={styles.loginTitle}>सुपरवाइजर लॉगिन</Text>
           <Text style={styles.loginSubtitle}>एक पेड़ माँ के नाम 2.0</Text>
         </View>

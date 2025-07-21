@@ -186,7 +186,7 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
               styles.infoValue,
               { color: student.photoUploaded ? '#4CAF50' : '#FF5722' }
             ]}>
-              {student.photoUploaded ? '✅ अपलोड किया गया' : '❌ अपलोड नहीं किया'}
+              {student.photoUploaded ? ' अपलोड किया गया' : 'अपलोड नहीं किया'}
             </Text>
           </View>
           
@@ -212,14 +212,14 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
                 style={[styles.actionButton, styles.viewButton]}
                 onPress={() => handleViewCertificate(student)}
               >
-                <Text style={styles.actionButtonText}>👁️ देखें</Text>
+                <Text style={styles.actionButtonText}> देखें</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
                 style={[styles.actionButton, styles.downloadButton]}
                 onPress={() => handleDownloadCertificate(student)}
               >
-                <Text style={styles.actionButtonText}>📥 डाउनलोड</Text>
+                <Text style={styles.actionButtonText}>डाउनलोड</Text>
               </TouchableOpacity>
             </>
           ) : (
@@ -233,7 +233,7 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
               disabled={!student.photoUploaded || isGenerating}
             >
               <Text style={styles.actionButtonText}>
-                {isGenerating ? '⏳ बनाया जा रहा...' : '🏆 बनाएं'}
+                {isGenerating ? ' बनाया जा रहा...' : ' बनाएं'}
               </Text>
             </TouchableOpacity>
           )}
@@ -252,7 +252,7 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
           </TouchableOpacity>
           
           <View style={styles.titleSection}>
-            <Text style={styles.title}>🏆 प्रमाणपत्र</Text>
+            <Text style={styles.title}> प्रमाणपत्र</Text>
             <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
           </View>
           
@@ -274,7 +274,7 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
 
         {/* Instructions */}
         <View style={styles.instructionsContainer}>
-          <Text style={styles.instructionsTitle}>📋 महत्वपूर्ण निर्देश:</Text>
+          <Text style={styles.instructionsTitle}> महत्वपूर्ण निर्देश:</Text>
           <Text style={styles.instructionText}>• प्रमाणपत्र बनाने के लिए पहले फोटो अपलोड करना जरूरी है</Text>
           <Text style={styles.instructionText}>• प्रमाणपत्र PDF फॉर्मेट में डाउनलोड होगा</Text>
           <Text style={styles.instructionText}>• केवल फोटो अपलोड करने वाले छात्र ही यहां दिखेंगे</Text>
@@ -284,14 +284,14 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
         {/* Certificates List */}
         <View style={styles.certificatesContainer}>
           <Text style={styles.sectionTitle}>
-            📜 छात्रों के प्रमाणपत्र ({totalEligible})
+             छात्रों के प्रमाणपत्र ({totalEligible})
           </Text>
           
           {studentsWithCertificates.length > 0 ? (
             studentsWithCertificates.map(renderCertificateCard)
           ) : (
             <View style={styles.emptyState}>
-              <Text style={styles.emptyIcon}>📸</Text>
+              <Text style={styles.emptyIcon}></Text>
               <Text style={styles.emptyTitle}>कोई छात्र योग्य नहीं है</Text>
               <Text style={styles.emptyText}>
                 प्रमाणपत्र बनाने के लिए पहले छात्रों की फोटो अपलोड करें
@@ -303,13 +303,13 @@ const CertificateScreen: React.FC<CertificateScreenProps> = ({ onBack }) => {
         {/* Bulk Actions */}
         {generatedCount < totalEligible && (
           <View style={styles.bulkActionsContainer}>
-            <Text style={styles.bulkTitle}>🔄 सभी के लिए एक साथ:</Text>
+            <Text style={styles.bulkTitle}> सभी के लिए एक साथ:</Text>
             <TouchableOpacity 
               style={[styles.bulkButton, isGenerating && styles.disabledButton]}
               disabled={isGenerating}
             >
               <Text style={styles.bulkButtonText}>
-                {isGenerating ? '⏳ सभी प्रमाणपत्र बनाए जा रहे...' : '🏆 सभी प्रमाणपत्र बनाएं'}
+                {isGenerating ? ' सभी प्रमाणपत्र बनाए जा रहे...' : ' सभी प्रमाणपत्र बनाएं'}
               </Text>
             </TouchableOpacity>
           </View>

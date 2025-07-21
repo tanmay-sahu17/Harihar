@@ -38,7 +38,7 @@ const UserTypeSelection: React.FC<UserTypeSelectionProps> = ({ onSelectUserType 
         {/* Header Section */}
         <View style={styles.headerSection}>
           <View style={styles.logoContainer}>
-            <Text style={styles.logoEmoji}>🌳</Text>
+            <Text style={styles.logoEmoji}></Text>
             <Text style={styles.appTitle}>एक पेड़ माँ के नाम 2.0</Text>
             <Text style={styles.appSubtitle}>रायपुर जिला शिक्षा पोर्टल</Text>
             <View style={styles.divider} />

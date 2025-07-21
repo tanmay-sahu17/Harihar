@@ -69,7 +69,7 @@ const PreviousPhotosScreen: React.FC<PreviousPhotosScreenProps> = ({ onBack }) =
         {/* Photo Thumbnail */}
         <View style={styles.imageContainer}>
           <View style={styles.imagePlaceholder}>
-            <Text style={styles.imageIcon}>🌳</Text>
+            <Text style={styles.imageIcon}></Text>
             <Text style={styles.imageText}>फोटो {photo.id}</Text>
           </View>
         </View>
@@ -77,24 +77,24 @@ const PreviousPhotosScreen: React.FC<PreviousPhotosScreenProps> = ({ onBack }) =
         {/* Photo Details */}
         <View style={styles.photoDetails}>
           <View style={styles.studentInfo}>
-            <Text style={styles.studentLabel}>✅ छात्र का नाम:</Text>
+            <Text style={styles.studentLabel}> छात्र का नाम:</Text>
             <Text style={styles.studentName}>{photo.studentName}</Text>
           </View>
           
           {photo.treeName && (
             <View style={styles.treeInfo}>
-              <Text style={styles.treeLabel}>🌿 पेड़ का नाम:</Text>
+              <Text style={styles.treeLabel}> पेड़ का नाम:</Text>
               <Text style={styles.treeName}>{photo.treeName}</Text>
             </View>
           )}
           
           <View style={styles.dateInfo}>
-            <Text style={styles.dateLabel}>📅 अपलोड दिनांक:</Text>
+            <Text style={styles.dateLabel}>अपलोड दिनांक:</Text>
             <Text style={styles.uploadDate}>{photo.uploadDate}</Text>
           </View>
           
           <TouchableOpacity style={styles.viewButton}>
-            <Text style={styles.viewButtonText}>📋 विवरण देखें</Text>
+            <Text style={styles.viewButtonText}>विवरण देखें</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -111,7 +111,7 @@ const PreviousPhotosScreen: React.FC<PreviousPhotosScreenProps> = ({ onBack }) =
           </TouchableOpacity>
           
           <View style={styles.titleSection}>
-            <Text style={styles.title}>🖼️ पुराने फोटो</Text>
+            <Text style={styles.title}> पुराने फोटो</Text>
             <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
           </View>
           
@@ -125,7 +125,7 @@ const PreviousPhotosScreen: React.FC<PreviousPhotosScreenProps> = ({ onBack }) =
 
         {/* Filter Section */}
         <View style={styles.filterSection}>
-          <Text style={styles.filterTitle}>🔍 फ़िल्टर करें:</Text>
+          <Text style={styles.filterTitle}> फ़िल्टर करें:</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll}>
             <TouchableOpacity style={[styles.filterButton, styles.activeFilter]}>
               <Text style={[styles.filterText, styles.activeFilterText]}>सभी</Text>
@@ -150,7 +150,7 @@ const PreviousPhotosScreen: React.FC<PreviousPhotosScreenProps> = ({ onBack }) =
         {/* Empty State (if no photos) */}
         {previousPhotos.length === 0 && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>📸</Text>
+            <Text style={styles.emptyIcon}></Text>
             <Text style={styles.emptyTitle}>कोई फोटो नहीं मिली</Text>
             <Text style={styles.emptyText}>अभी तक कोई फोटो अपलोड नहीं की गई है</Text>
           </View>

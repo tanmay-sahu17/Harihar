@@ -50,7 +50,7 @@ const CRCHomeScreen: React.FC<CRCHomeScreenProps> = ({ onBack, onNavigate }) => 
             <Text style={styles.welcomeText}>सुपरवाइजर डैशबोर्ड</Text>
             <Text style={styles.subtitle}>Supervisor Control Panel</Text>
             <Text style={styles.blockInfo}>एक पेड़ माँ के नाम 2.0 निगरानी</Text>
-            <Text style={styles.urgentNotice}>🚨 रायपुर जिला पीछे है - तत्काल कार्रवाई करें</Text>
+            <Text style={styles.urgentNotice}> रायपुर जिला पीछे है - तत्काल कार्रवाई करें</Text>
           </View>
         </View>
 

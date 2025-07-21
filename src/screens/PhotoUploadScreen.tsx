@@ -87,9 +87,9 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
 
     if (result.type === 'success') {
       setEvoCertificate(result);
-      Alert.alert("✅ EVO सर्टिफिकेट चुना गया", result.name || 'फाइल');
+      Alert.alert("EVO सर्टिफिकेट चुना गया", result.name || 'फाइल');
     } else {
-      Alert.alert("❌ कोई सर्टिफिकेट नहीं चुना गया");
+      Alert.alert("कोई सर्टिफिकेट नहीं चुना गया");
     }
   };
 
@@ -108,7 +108,7 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
 
     setTimeout(() => {
       setIsUploading(false);
-      Alert.alert('✅ सफलता!', 'फोटो सफलतापूर्वक अपलोड हो गई है', [
+      Alert.alert(' सफलता!', 'फोटो सफलतापूर्वक अपलोड हो गई है', [
         {
           text: 'OK',
           onPress: () => {
@@ -130,7 +130,7 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
             <Text style={styles.backButtonText}>← वापस</Text>
           </TouchableOpacity>
           <View style={styles.titleSection}>
-            <Text style={styles.title}>📸 फोटो अपलोड</Text>
+            <Text style={styles.title}>फोटो अपलोड</Text>
             <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
           </View>
         </View>
@@ -138,7 +138,7 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
         <View style={styles.formContainer}>
           {/* Student Selector */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>✅ छात्र का नाम / ID *</Text>
+            <Text style={styles.fieldLabel}> छात्र का नाम / ID *</Text>
             <TouchableOpacity
               style={styles.studentSelector}
               onPress={() => {
@@ -166,17 +166,17 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
 
           {/* Photo Upload */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>✅ फोटो (Camera/Gallery) *</Text>
+            <Text style={styles.fieldLabel}> फोटो (Camera/Gallery) *</Text>
             <TouchableOpacity style={styles.photoButton} onPress={handleCameraPress}>
               <Text style={styles.photoText}>
-                {capturedPhoto ? '📷 फोटो चुनी गई' : '📸 फोटो लें या चुनें'}
+                {capturedPhoto ? ' फोटो चुनी गई' : 'फोटो लें या चुनें'}
               </Text>
             </TouchableOpacity>
           </View>
 
           {/* Tree Name */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>✅ पेड़ का नाम (वैकल्पिक)</Text>
+            <Text style={styles.fieldLabel}>पेड़ का नाम (वैकल्पिक)</Text>
             <TextInput
               style={styles.textInput}
               value={treeName}
@@ -188,20 +188,20 @@ const PhotoUploadScreen: React.FC<PhotoUploadScreenProps> = ({ onBack }) => {
 
           {/* EVO Certificate Upload */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>📄 EVO प्रमाणपत्र अपलोड करें (वैकल्पिक)</Text>
+            <Text style={styles.fieldLabel}>EVO प्रमाणपत्र अपलोड करें (वैकल्पिक)</Text>
             <TouchableOpacity style={styles.uploadButton} onPress={handlePickEvoCertificate}>
-              <Text style={styles.uploadButtonText}>📄 सर्टिफिकेट चुनें</Text>
+              <Text style={styles.uploadButtonText}>सर्टिफिकेट चुनें</Text>
             </TouchableOpacity>
             {evoCertificate && (
               <Text style={{ marginTop: 8, color: '#4CAF50' }}>
-                ✅ चुना गया: {evoCertificate.name}
+                चुना गया: {evoCertificate.name}
               </Text>
             )}
           </View>
 
           {/* Upload DateTime */}
           <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>✅ अपलोड दिनांक और समय</Text>
+            <Text style={styles.fieldLabel}>अपलोड दिनांक और समय</Text>
             <View style={styles.dateTimeContainer}>
               <Text style={styles.dateTimeText}>{getCurrentDateTime()}</Text>
               <Text style={styles.autoSetText}>स्वचालित सेट</Text>
