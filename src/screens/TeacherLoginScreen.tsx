@@ -1,94 +1,194 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
 
-const TeacherLoginScreen = ({ navigation }: any) => {
+interface TeacherLoginScreenProps {
+  onBack: () => void;
+  onLogin: () => void;
+}
+
+const TeacherLoginScreen: React.FC<TeacherLoginScreenProps> = ({ onBack, onLogin }) => {
   const [udiseId, setUdiseId] = useState('');
   const [teacherName, setTeacherName] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (udiseId === 'demo123' && password === '1234') {
-      navigation.navigate('PhotoUploadScreen');
+    if (!udiseId.trim() || !teacherName.trim() || !password.trim()) {
+      Alert.alert('त्रुटि', 'कृपया सभी फील्ड भरें');
+      return;
+    }
+
+    // Demo login condition
+    if (password === '1234') {
+      Alert.alert('लॉगिन सफल', 'आप सफलतापूर्वक लॉगिन हो गए हैं');
+      onLogin(); // Trigger success event
     } else {
-      Alert.alert('गलत ID या पासवर्ड');
+      Alert.alert(' गलत पासवर्ड');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>शिक्षक लॉगिन</Text>
-      <Text style={styles.subtitle}>एक पेड़ माँ के नाम 2.0</Text>
-
-      <Text style={styles.label}>UDISE ID</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="स्कूल का UDISE ID दर्ज करें"
-        value={udiseId}
-        onChangeText={setUdiseId}
-      />
-
-      <Text style={styles.label}>शिक्षक का नाम</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="अपना पूरा नाम दर्ज करें"
-        value={teacherName}
-        onChangeText={setTeacherName}
-      />
-
-      <Text style={styles.label}>पासवर्ड</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="पासवर्ड दर्ज करें"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>लॉगिन</Text>
-      </TouchableOpacity>
-
-      {/* Demo Info */}
-      <View style={styles.demoInfo}>
-        <Text style={styles.demoText}>डेमो जानकारी:</Text>
-        <Text style={styles.demoText}>UDISE ID: कोई भी</Text>
-        <Text style={styles.demoText}>नाम कोई भी</Text>
-      
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>← वापस</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+
+      <View style={styles.loginContent}>
+        <View style={styles.logoSection}>
+          <Text style={styles.loginTitle}>शिक्षक लॉगिन</Text>
+          <Text style={styles.loginSubtitle}>एक पेड़ माँ के नाम 2.0</Text>
+        </View>
+
+        <View style={styles.loginForm}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>UDISE ID</Text>
+            <TextInput
+              style={styles.input}
+              value={udiseId}
+              onChangeText={setUdiseId}
+              placeholder="स्कूल का UDISE ID"
+              keyboardType="default"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>शिक्षक का नाम</Text>
+            <TextInput
+              style={styles.input}
+              value={teacherName}
+              onChangeText={setTeacherName}
+              placeholder="पूरा नाम"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>पासवर्ड</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="पासवर्ड"
+              secureTextEntry
+            />
+          </View>
+
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>लॉगिन</Text>
+          </TouchableOpacity>
+
+          <View style={styles.credentialsHint}>
+            <Text style={styles.hintText}>डेमो जानकारी:</Text>
+            <Text style={styles.hintText}>UDISE ID: कोई भी</Text>
+            <Text style={styles.hintText}>नाम: कोई भी</Text>
+            <Text style={styles.hintText}>पासवर्ड: 1234</Text>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#E8F5E9', padding: 20, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 5, color: '#2E7D32' },
-  subtitle: { textAlign: 'center', color: '#555', marginBottom: 20 },
-  label: { fontSize: 16, color: '#388E3C', marginBottom: 6 },
-  input: {
-    backgroundColor: 'white',
-    borderColor: '#C8E6C9',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 15,
+  container: {
+    flex: 1,
+    backgroundColor: '#E8F5E8',
   },
-  button: {
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 25,
     backgroundColor: '#4CAF50',
-    paddingVertical: 14,
+  },
+  backButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  loginContent: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+  },
+  logoSection: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  loginTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  loginSubtitle: {
+    fontSize: 16,
+    color: '#4CAF50',
+    textAlign: 'center',
+  },
+  loginForm: {
+    backgroundColor: 'white',
+    padding: 25,
+    borderRadius: 15,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#C8E6C9',
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: '#C8E6C9',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    fontSize: 16,
+    backgroundColor: '#F1F8E9',
+  },
+  loginButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    elevation: 2,
+    marginTop: 10,
   },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  demoInfo: {
+  loginButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  credentialsHint: {
     marginTop: 20,
-    padding: 12,
-    backgroundColor: '#F1F8E9',
+    padding: 10,
+    backgroundColor: '#E8F5E8',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#C8E6C9',
   },
-  demoText: { fontSize: 14, color: '#388E3C', marginBottom: 3 },
+  hintText: {
+    fontSize: 12,
+    color: '#2E7D32',
+    textAlign: 'center',
+    marginBottom: 2,
+  },
 });
 
 export default TeacherLoginScreen;
