@@ -140,7 +140,7 @@ const ProgressTrackingScreen: React.FC<ProgressTrackingScreenProps> = ({ onBack 
           <Text style={styles.sectionTitle}>उपलब्धि माइलस्टोन</Text>
           <View style={styles.milestoneContainer}>
             <View style={styles.milestoneCard}>
-              <Text style={styles.milestoneEmoji}>🎯</Text>
+              <Text style={styles.milestoneEmoji}></Text>
               <Text style={styles.milestoneTitle}>पहला लक्ष्य</Text>
               <Text style={styles.milestoneDesc}>1000 पेड़ लगाने का लक्ष्य</Text>
               <View style={styles.achievedBadge}>
@@ -149,7 +149,7 @@ const ProgressTrackingScreen: React.FC<ProgressTrackingScreenProps> = ({ onBack 
             </View>
             
             <View style={styles.milestoneCard}>
-              <Text style={styles.milestoneEmoji}>🌟</Text>
+              <Text style={styles.milestoneEmoji}></Text>
               <Text style={styles.milestoneTitle}>दूसरा लक्ष्य</Text>
               <Text style={styles.milestoneDesc}>2000 पेड़ लगाने का लक्ष्य</Text>
               <View style={styles.achievedBadge}>
