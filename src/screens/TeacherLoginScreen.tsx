@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Alert,
 } from 'react-native';
+import api from '../utils/api';
 
 interface TeacherLoginScreenProps {
   onBack: () => void;
@@ -18,19 +19,41 @@ const TeacherLoginScreen: React.FC<TeacherLoginScreenProps> = ({ onBack, onLogin
   const [udiseId, setUdiseId] = useState('');
   const [teacherName, setTeacherName] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('लॉगिन हो रहा है...');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!udiseId.trim() || !teacherName.trim() || !password.trim()) {
       Alert.alert('त्रुटि', 'कृपया सभी फील्ड भरें');
       return;
     }
 
-    // Demo login condition
-    if (password === '1234') {
-      Alert.alert('लॉगिन सफल', 'आप सफलतापूर्वक लॉगिन हो गए हैं');
-      onLogin(); // Trigger success event
-    } else {
-      Alert.alert(' गलत पासवर्ड');
+    setIsLoading(true);
+    setLoadingMessage('Credentials verify हो रहे हैं...');
+    
+    try {
+      // Use API for login with credential validation
+      const result = await api.auth.teacherLogin(udiseId, teacherName, password);
+      
+      if (result.success) {
+        setLoadingMessage('लॉगिन सफल!');
+        
+        // Show success message briefly then navigate
+        setTimeout(() => {
+          onLogin();
+        }, 500);
+      } else {
+        // Credentials not found in database - show proper error
+        Alert.alert(
+          'लॉगिन असफल', 
+          'गलत UDISE कोड, शिक्षक नाम या पासवर्ड। कृपया सही जानकारी डालें।\n\nValid credentials के लिए valid_login_credentials.md file देखें।'
+        );
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('त्रुटि', 'लॉगिन में समस्या हुई। कृपया पुनः प्रयास करें।');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,15 +104,25 @@ const TeacherLoginScreen: React.FC<TeacherLoginScreenProps> = ({ onBack, onLogin
             />
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>लॉगिन</Text>
+          <TouchableOpacity 
+            style={[styles.loginButton, isLoading && { opacity: 0.7 }]} 
+            onPress={handleLogin}
+            disabled={isLoading}
+          >
+            <Text style={styles.loginButtonText}>
+              {isLoading ? loadingMessage : 'लॉगिन'}
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.credentialsHint}>
             <Text style={styles.hintText}>डेमो जानकारी:</Text>
-            <Text style={styles.hintText}>UDISE ID: कोई भी</Text>
-            <Text style={styles.hintText}>नाम: कोई भी</Text>
-            <Text style={styles.hintText}>पासवर्ड: 1234</Text>
+            <Text style={styles.hintText}>UDISE ID: 123</Text>
+            <Text style={styles.hintText}>नाम: teacher</Text>
+            <Text style={styles.hintText}>पासवर्ड: 123</Text>
+            <Text style={styles.hintText}>या</Text>
+            <Text style={styles.hintText}>UDISE ID: 456</Text>
+            <Text style={styles.hintText}>नाम: admin</Text>
+            <Text style={styles.hintText}>पासवर्ड: 456</Text>
           </View>
         </View>
       </View>

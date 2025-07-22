@@ -71,6 +71,7 @@ const TeacherHomeScreen: React.FC<TeacherHomeScreenProps> = ({ onBack, onNavigat
         }
         break;
       default:
+        console.log('Unknown action:', actionId);
         break;
     }
   };
